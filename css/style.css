@@ -1,0 +1,142 @@
+html {
+	position: relative;
+	min-height: 100%;
+}
+
+body {
+	font-family: 'Roboto', sans-serif;
+	color: rgba(0,0,0,0.80);
+	font-size: 15px;
+	/* Margin bottom by footer height */
+	margin-bottom: 40px;
+}
+
+.copyright {
+	position: relative;
+	padding-top: 12px;
+}
+.copyright a{
+	color: #e9e9e9;
+}
+
+.footer {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	/* Set the fixed height of the footer here */
+	height: 40px;
+	background-color: #B71C1C;
+	color: #ffffff;
+	font-size: 13px;
+	box-shadow: 0 0px 17px 0 rgba(0,0,0,0.2),0 0px 20px 0 rgba(0,0,0,0.19);
+}
+
+.navbar-default .navbar-toggle .icon-bar {
+    background-color: #ffffff;
+}
+.navbar-default .navbar-toggle:hover {
+    background-color: #4db6ac;
+}
+.navbar-default .navbar-toggle {
+    border-color: #ffffff;
+}
+
+
+.rednav {
+	background-color: #B71C1C;
+	border-radius: 0px;
+	color: #ffffff;
+	box-shadow: 0 0px 17px 0 rgba(0,0,0,0.2),0 0px 20px 0 rgba(0,0,0,0.19);
+	border-color: #B71C1C;
+}
+
+.navbar-toggle:focus {
+    color: #ffffff;
+	background-color: rgba(255, 255, 255, 0.3);
+}
+
+.tool {
+	background-color: #B71C1C;
+	color: #ffffff;
+	border: solid 2px #ffffff;
+	width: 45px;
+	height: 45px;
+	margin: 5px;
+	position: relative;
+	float: left;
+	transition: all 0.3s ease;
+}
+.tool:hover {
+	background-color: #ffffff;
+	color: #B71C1C;
+}
+
+
+
+
+.centered {
+	float: none;
+    margin: 0 auto;
+}
+
+
+.dont-break-out {
+
+  /* These are technically the same, but use both */
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+
+  -ms-word-break: break-all;
+  /* Instead use this non-standard one: */
+  word-break: break-word;
+
+  /* Adds a hyphen where the word breaks, if supported (No Blink) */
+  -ms-hyphens: auto;
+  -moz-hyphens: auto;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+
+}
+
+
+
+.modal-header {
+	background-color: #B71C1C;
+	border-radius: 0px;
+	color: #ffffff;
+	border-color: #B71C1C;
+}
+.modal-footer {
+	background-color: #B71C1C;
+	border-radius: 0px;
+	color: #ffffff;
+	border-color: #B71C1C;
+}
+.modal-footer .btn-default {
+	background-color: #B71C1C;
+	border-radius: 0px;
+	border: solid 2px #ffffff;
+	color: #ffffff;
+}
+.modal-footer .btn-default:active {
+	background-color: #4db6ac;
+	border-radius: 0px;
+	border: solid 2px #ffffff;
+	color: #ffffff;
+}
+.modal-header .close {
+	color: #ffffff;
+	opacity: .8;
+}
+.modal-header .close:hover {
+	color: #ffffff;
+	opacity: .99;
+}
+
+
+                                         
+
+                                         
+                                         
+                                         
+                                            
