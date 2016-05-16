@@ -71,7 +71,13 @@ body {
 	color: #B71C1C;
 }
 
-
+.canvas {
+	border: solid 2px #447799;
+	width: 100%;
+	height: 10px;
+	position: relative;
+	float: left;
+}
 
 
 .centered {
@@ -134,9 +140,14 @@ body {
 }
 
 
-                                         
 
-                                         
+
+
+@media screen and (min-width: 720px) {
+	.canvas {
+		width: 50%;
+	}
+}                                
                                          
                                          
                                             
