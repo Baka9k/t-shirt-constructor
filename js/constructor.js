@@ -31,7 +31,7 @@ editor.createCanvas = function(element) {
 	return canvas;
 }
 
-editor.drawFill = function (color) {
+editor.drawFill = function(color) {
 	for (var ctx in editor.contexts) {
 		var context = editor.contexts[ctx];
 		context.fillStyle = color;
@@ -39,18 +39,29 @@ editor.drawFill = function (color) {
 	}
 }
 
-
 editor.drawMasks = function() {
 	for (var ctx in editor.contexts) {
 		var texture = new Image();
 		texture.src = "images/" + ctx + ".png";
-		texture.onload = (function (texture, ctx) { return function () {
+		texture.onload = (function (texture, ctx) {return function() {
 			editor.contexts[ctx].drawImage(texture,  0, 0, editor.variables.canvasWidth, editor.variables.canvasHeight);
 		} })(texture,ctx);
 	}
 }
 
-editor.init = function () {
+editor.activateTools = function() {
+	$(".tool").each(function(index) {
+		$(this).on("click", function() {
+		    editor.useTool($(this).attr('id')); 
+		});
+	});
+}
+
+editor.useTool = function(tool) {
+	console.log(tool);
+}
+
+editor.init = function() {
 	editor.preparePage();
 	editor.canvases.front = editor.createCanvas(document.getElementById("canvasDiv1"));
 	editor.canvases.rear = editor.createCanvas(document.getElementById("canvasDiv2"));
@@ -60,6 +71,7 @@ editor.init = function () {
 	}
 	editor.drawFill("#FF0000");
 	editor.drawMasks();
+	editor.activateTools();
 }
 
 
