@@ -31,6 +31,13 @@ editor.createCanvas = function(element) {
 	return canvas;
 }
 
+editor.drawFill = function (color) {
+	for (var ctx in editor.contexts) {
+		var context = editor.contexts[ctx];
+		context.fillStyle = color;
+		context.fillRect(0, 0, editor.variables.canvasWidth, editor.variables.canvasHeight);
+	}
+}
 
 
 editor.drawMasks = function() {
@@ -40,7 +47,6 @@ editor.drawMasks = function() {
 		texture.onload = (function (texture, ctx) { return function () {
 			editor.contexts[ctx].drawImage(texture,  0, 0, editor.variables.canvasWidth, editor.variables.canvasHeight);
 		} })(texture,ctx);
-		console.log(editor.variables.canvasWidth, editor.variables.canvasHeight);
 	}
 }
 
@@ -52,6 +58,7 @@ editor.init = function () {
 	for (var canvas in editor.canvases) {
 		editor.contexts[canvas] = editor.canvases[canvas].getContext("2d");
 	}
+	editor.drawFill("#FF0000");
 	editor.drawMasks();
 }
 
