@@ -58,8 +58,16 @@ editor.activateTools = function() {
 }
 
 editor.useTool = function(tool) {
-	console.log(tool);
+	editor.tools[tool]();
+	editor.openModal();
 }
+
+editor.openModal = function() {
+	$("#addtextmodal").modal();
+}
+
+
+
 
 editor.init = function() {
 	editor.preparePage();
@@ -75,10 +83,81 @@ editor.init = function() {
 }
 
 
+//    ---- Tools ----
+
+editor.tools = {
+	addtext: function() {
+		ReactDOM.render(
+			<addtext />,
+			document.getElementById('modalContainer')
+		);
+	},
+	addpicture: function() {
+	
+	},
+	color: function() {
+	
+	},
+	addfigure: function() {
+	
+	},
+	undo: function() {
+	
+	},
+	clearall: function() {
+	
+	},
+	save: function() {
+	
+	},
+	load: function() {
+	
+	},
+	render: function() {
+	
+	},
+}
+	
+
+
 
 $(document).ready(function() {
 	editor.init();
 });
+
+
+
+
+//  ---- React classes ----
+
+
+var addtext = React.createClass({
+	render: function() {
+		return (
+			<div class="modal fade" id="addtextmodal" role="dialog">
+				<div class="modal-dialog">
+					<div class="modal-content">
+						<div class="modal-header">
+							<button type="button" class="close" data-dismiss="modal">&times;</button>
+							<h4 class="modal-title">Modal Header</h4>
+						</div>
+						<div class="modal-body">
+							<p>Some text in the modal.</p>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+						</div>
+					</div>
+			  	</div>
+			</div>
+		);
+	}
+});
+
+
+
+
+
 
 
 
