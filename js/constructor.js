@@ -60,13 +60,9 @@ editor.activateTools = function() {
 }
 
 editor.useTool = function(tool) {
-	editor.openModal();
 	editor.tools[tool]();
 }
 
-editor.openModal = function() {
-	$("#modal").modal();
-}
 
 
 
@@ -89,10 +85,7 @@ editor.init = function() {
 
 editor.tools = {
 	addtext: function() {
-		ReactDOM.render(
-			<addtext />,
-			document.getElementsByClassName("modal-open")[0]
-		);
+	
 	},
 	addpicture: function() {
 	
@@ -119,13 +112,7 @@ editor.tools = {
 	
 	},
 }
-	
 
-
-
-$(document).ready(function() {
-	editor.init();
-});
 
 
 
@@ -135,7 +122,7 @@ $(document).ready(function() {
 
 
 var Header = React.createClass({
-    render(){
+    render: function() {
     	return(
     		<nav class="navbar navbar-fixed rednav">
 			  <div class="container-fluid">
@@ -196,7 +183,7 @@ var Header = React.createClass({
 
 
 var Footer = React.createClass({
-    render(){
+    render: function() {
     	return(
 			<footer class="footer">
 			  <div class="container">
@@ -214,11 +201,13 @@ var Footer = React.createClass({
 });
 
 var Body = React.createClass({
-    render(){
+    render: function() {
     	return(
 			<div class="canvas" id="canvasDiv1"></div>
 			<div class="canvas" id="canvasDiv2"></div>
 			<div class="canvas" id="canvasDiv3"></div>
+			
+			<div class="container">&nbsp;</div>
 		);
 	}
 });
@@ -235,11 +224,11 @@ var Body = React.createClass({
 
 
 var Modal = React.createClass({
-    componentDidMount(){
+    componentDidMount: function() {
         $(this.getDOMNode()).modal('show');
         $(this.getDOMNode()).on('hidden.bs.modal', this.props.handleHideModal);
     },
-    render(){
+    render: function() {
         return (
           <div className="modal fade">
             <div className="modal-dialog">
@@ -260,7 +249,7 @@ var Modal = React.createClass({
           </div>
         )
     },
-    propTypes:{
+    propTypes: {
         handleHideModal: React.PropTypes.func.isRequired
     }
 });
@@ -268,16 +257,20 @@ var Modal = React.createClass({
 
 
 var App = React.createClass({
-    getInitialState(){
+    getInitialState: function() {
         return {view: {showModal: false}}
     },
-    handleHideModal(){
+    handleHideModal: function() {
         this.setState({view: {showModal: false}})
     },
-    handleShowModal(){
+    handleShowModal: function() {
         this.setState({view: {showModal: true}})
     },
-    render(){
+    componentDidUpdate: function() {
+        editor.init();
+    }
+    
+    render: function() {
 		return(
 		    <div className="row">
 		        <button className="btn btn-default btn-block" onClick={this.handleShowModal}>Open Modal</button>
@@ -290,12 +283,12 @@ var App = React.createClass({
 
 
 
-
-
 React.render(
-   <App />,
-    document.getElementById('container')
+	<App />,
+	document.body
 );
+
+
 
 
 
