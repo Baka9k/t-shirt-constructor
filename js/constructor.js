@@ -121,13 +121,6 @@ editor.tools = {
 //==============================  REACT  ==============================
 
 
-var Header = React.createClass({
-    render: function() {
-    	return(
-    		<nav class="navbar navbar-fixed rednav">
-			  <div class="container-fluid">
-
-				<ul class="nav navbar-nav">
 					<li class="nav-item" id="tools">
 					  <button type="button" class="tool" data-toggle="tooltip" title="Добавить текст" id="addtext">
 					  	<span class="glyphicon glyphicon-font"></span>
@@ -174,8 +167,89 @@ var Header = React.createClass({
 					  </button>
 					</li>
 					
+var ToolButtons = React.createClass({
+
+	tools: function() {
+		return [
+			{
+				tooltip: "Добавить текст",
+				id: "addtext",
+				glyphicon: "glyphicon-font"
+			},
+			{
+				tooltip: "Добавить картинку",
+				id: "addpicture",
+				glyphicon: "glyphicon-picture"
+			},
+			{
+				tooltip: "Цвет фона",
+				id: "color",
+				glyphicon: "glyphicon-tint"
+			},
+			{
+				tooltip: "Добавить фигуру",
+				id: "addfigure",
+				glyphicon: "glyphicon-stop"
+			},
+			{
+				tooltip: "Отменить последнее действие",
+				id: "undo",
+				glyphicon: "glyphicon-backward"
+			},
+			{
+				tooltip: "Очистить все",
+				id: "clear",
+				glyphicon: "glyphicon-trash"
+			},
+			{
+				tooltip: "Сохранить макет",
+				id: "save",
+				glyphicon: "glyphicon-floppy-save"
+			},
+			{
+				tooltip: "Загрузить макет",
+				id: "load",
+				glyphicon: "glyphicon-floppy-open"
+			},
+			{
+				tooltip: "Сохранить как картинку",
+				id: "renderpng",
+				glyphicon: "glyphicon-save-file"
+			}
+			
+		];
+	},
+	
+    render: function() {
+    
+    	var buttons = this.tools.map(function(tool) {
+    		return (<li class="nav-item">
+					  <button type="button" class="tool" data-toggle="tooltip" title="{tool.tooltip}" id="{tool.id}">
+					  	<span class="glyphicon {tool.glyphicon}"></span>
+					  </button>
+					</li>
+					);
+    	});
+    	
+    	return(
+			{buttons}
+		);
+	}
+	
+});
+
+var Header = React.createClass({
+    render: function() {
+    	return(
+    		<nav class="navbar navbar-fixed rednav">
+			  <div class="container-fluid">
+
+				<ul class="nav navbar-nav">
+
+					<ToolButtons />
+					
 				</ul>
-			  </div><!-- /.container-fluid -->
+			  </div>
 			</nav>
 		);
 	}
@@ -192,7 +266,7 @@ var Footer = React.createClass({
 					<div class="copyright">
 						<a href="#">&copy; 2016 Mikhail Semochkin</a>
 					</div>
-				<div>  
+				</div>  
 		
 			  </div>
 			</footer>
@@ -203,30 +277,27 @@ var Footer = React.createClass({
 var Body = React.createClass({
     render: function() {
     	return(
-			<div class="canvas" id="canvasDiv1"></div>
-			<div class="canvas" id="canvasDiv2"></div>
-			<div class="canvas" id="canvasDiv3"></div>
-			
+    		<div>
+				<div class="canvas" id="canvasDiv1"></div>
+				<div class="canvas" id="canvasDiv2"></div>
+				<div class="canvas" id="canvasDiv3"></div>
+			</div>
+		);
+	}
+});
+
+var EmptyContainer = React.createClass({
+    render: function() {
+    	return(
 			<div class="container">&nbsp;</div>
 		);
 	}
 });
 
-
-
-
-
-
-
-
-
-
-
-
 var Modal = React.createClass({
     componentDidMount: function() {
-        $(this.getDOMNode()).modal('show');
-        $(this.getDOMNode()).on('hidden.bs.modal', this.props.handleHideModal);
+        $(ReactDOM.findDOMNode(this)).modal('show');
+        $(ReactDOM.findDOMNode(this)).on('hidden.bs.modal', this.props.handleHideModal);
     },
     render: function() {
         return (
@@ -256,6 +327,7 @@ var Modal = React.createClass({
 
 
 
+
 var App = React.createClass({
     getInitialState: function() {
         return {view: {showModal: false}}
@@ -268,9 +340,11 @@ var App = React.createClass({
     },
     componentDidUpdate: function() {
         editor.init();
-    }
+        console.log("Nya!");
+    },
     
     render: function() {
+    	
 		return(
 		    <div className="row">
 		        <button className="btn btn-default btn-block" onClick={this.handleShowModal}>Open Modal</button>
@@ -283,7 +357,7 @@ var App = React.createClass({
 
 
 
-React.render(
+ReactDOM.render(
 	<App />,
 	document.body
 );
