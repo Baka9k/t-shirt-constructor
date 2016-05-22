@@ -82,11 +82,14 @@ editor.init = function() {
 }
 
 
-//    ---- Tools ----
+//=============================== TOOLS ======================================
 
 editor.tools = {
 	addtext: function() {
-	
+		ReactDOM.render(
+			<Addtext />,
+			document.getElementById("modalBody")
+		);
 	},
 	addpicture: function() {
 	
@@ -195,17 +198,29 @@ var ToolButtons = React.createClass({
 	
 });
 
+
+//--------------- tool dialogs -------------------
+
+var Addtext = React.createClass({
+    render: function() {
+    	return(
+    		<div>Nyaaa!</div>
+		);
+	}
+});
+
+
+//-------------------------------------------------
+
+
 var Header = React.createClass({
     render: function() {
     	return(
     		<nav className="navbar navbar-fixed rednav">
 			  <div className="container-fluid">
 
-				
-
 					<ToolButtons />
 					
-				
 			  </div>
 			</nav>
 		);
@@ -300,7 +315,6 @@ var App = React.createClass({
         editor.init();
         
     },
-    
     
     render: function() {
     	
