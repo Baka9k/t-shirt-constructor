@@ -85,33 +85,47 @@ editor.init = function() {
 //=============================== TOOLS ======================================
 
 editor.tools = {
+
 	addtext: function() {
 		ReactDOM.render(
 			<Addtext />,
 			document.getElementById("modalBody")
 		);
+		
+		$(".fontlist").each(function(index) {
+			$(this).css("font-family", $(this).text()); 
+		});
+		
 	},
+	
 	addpicture: function() {
 	
 	},
+	
 	color: function() {
 	
 	},
+	
 	addfigure: function() {
 	
 	},
+	
 	undo: function() {
 	
 	},
+	
 	clearall: function() {
 	
 	},
+	
 	save: function() {
 	
 	},
+	
 	load: function() {
 	
 	},
+	
 	render: function() {
 	
 	},
@@ -125,6 +139,94 @@ editor.tools = {
 //==============================  REACT  =======================================
 
 					
+
+
+//--------------- tool dialogs -------------------
+
+var Addtext = React.createClass({
+    render: function() {
+    	return(
+    		<div>
+    			
+				<div className="input-group">
+				  <input type="text" className="form-control" placeholder="Введите текст" />
+				</div>
+				
+				<div className="col-xs-8 col-sm-6 col-md-6 col-lg-4 smallinput">
+					<div className="input-group">
+					  <input type="text" className="form-control" placeholder="Введите размер шрифта" />
+					  <span className="input-group-addon" id="fontsize">px</span>
+					</div>
+				</div>
+				
+				<div className="col-xs-8 col-sm-6 col-md-6 col-lg-4 smallinput">
+
+					  <Fonts />
+					    
+				</div>
+				
+				<div className="col-xs-12 col-sm-12 col-md-12 col-lg-10 preview">
+					<canvas id = "preview" /> 
+				</div>				
+
+				
+				
+    		</div>
+		);
+	}
+});
+
+
+/*    			<label for="text">Добавить текст</label>
+				<div className="input-group">
+				  <input type="text" className="form-control" placeholder="Введите текст" />
+				  <span className="input-group-addon" id="text">@example.com</span>
+				</div>
+
+*/
+
+//-------------- tool dialogs classes -------------
+
+var Fonts = React.createClass({
+
+	fonts: function() {
+		return [
+			'Georgia, serif',
+			'"Palatino Linotype", "Book Antiqua", Palatino, serif',
+			'"Times New Roman", Times, serif',
+			'Arial, Helvetica, sans-serif',
+			'"Arial Black", Gadget, sans-serif',
+			'"Comic Sans MS", cursive, sans-serif',
+			'Impact, Charcoal, sans-serif',
+			'"Lucida Sans Unicode", "Lucida Grande", sans-serif',
+			'Tahoma, Geneva, sans-serif',
+			'"Trebuchet MS", Helvetica, sans-serif',
+			'Verdana, Geneva, sans-serif',
+			'"Courier New", Courier, monospace',
+			'"Lucida Console", Monaco, monospace'
+		];
+	},
+	
+    render: function() {
+    	var fontsarr = this.fonts();
+    	var fontlist = fontsarr.map(function(font) {
+    		return (<option value={font} key={font} className="fontlist">
+					  {font}
+					</option>
+					);
+    	});
+
+    	return(
+    		<select className="form-control">
+				{fontlist}
+			</select>
+		);
+	}
+	
+});
+
+//-------------------------------------------------
+
 var ToolButtons = React.createClass({
 
 	tools: function() {
@@ -199,19 +301,6 @@ var ToolButtons = React.createClass({
 });
 
 
-//--------------- tool dialogs -------------------
-
-var Addtext = React.createClass({
-    render: function() {
-    	return(
-    		<div>Nyaaa!</div>
-		);
-	}
-});
-
-
-//-------------------------------------------------
-
 
 var Header = React.createClass({
     render: function() {
@@ -280,7 +369,7 @@ var Modal = React.createClass({
                   <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                   <h4 className="modal-title" id="modalTitle"></h4>
                 </div>
-                <div className="modal-body" id="modalBody">
+                <div className="modal-body row" id="modalBody">
                   
                 </div>
                 <div className="modal-footer">

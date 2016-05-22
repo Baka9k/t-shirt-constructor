@@ -154,6 +154,27 @@ body {
 	display: none;
 }
 
+.input-group {
+	margin: 10px;
+}
+
+.smallinput {
+	margin-right: 0px;
+	margin-left: 0px;
+	padding: 5px;
+}
+
+.preview {
+	
+}
+
+
+#preview {
+	width: 100%;
+	min-height: 80px;
+}
+
+
 
 
 @media screen and (min-width: 720px) {
