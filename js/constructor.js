@@ -118,54 +118,8 @@ editor.tools = {
 
 
 
-//==============================  REACT  ==============================
+//==============================  REACT  =======================================
 
-
-					<li class="nav-item" id="tools">
-					  <button type="button" class="tool" data-toggle="tooltip" title="Добавить текст" id="addtext">
-					  	<span class="glyphicon glyphicon-font"></span>
-					  </button>
-					</li>
-					<li class="nav-item">
-					  <button type="button" class="tool" data-toggle="tooltip" title="Добавить картинку" id="addpicture">
-					  	<span class="glyphicon glyphicon-picture"></span>
-					  </button>
-					</li>
-					<li class="nav-item">
-					  <button type="button" class="tool" data-toggle="tooltip" title="Цвет фона" id="color">
-					  	<span class="glyphicon glyphicon-tint"></span>
-					  </button>
-					</li>
-					<li class="nav-item">
-					  <button type="button" class="tool" data-toggle="tooltip" title="Добавить фигуру" id="addfigure">
-					  	<span class="glyphicon glyphicon-stop"></span>
-					  </button>
-					</li>
-					<li class="nav-item">
-					  <button type="button" class="tool" data-toggle="tooltip" title="Отменить последнее действие" id="undo">
-					  	<span class="glyphicon glyphicon-backward"></span>
-					  </button>
-					</li>
-					<li class="nav-item">
-					  <button type="button" class="tool" data-toggle="tooltip" title="Очистить всё" id="clearall">
-					  	<span class="glyphicon glyphicon-trash"></span>
-					  </button>
-					</li>
-					<li class="nav-item">
-					  <button type="button" class="tool" data-toggle="tooltip" title="Сохранить макет" id="save">
-					  	<span class="glyphicon glyphicon-floppy-save"></span>
-					  </button>
-					</li>
-					<li class="nav-item">
-					  <button type="button" class="tool" data-toggle="tooltip" title="Загрузить макет" id="load">
-					  	<span class="glyphicon glyphicon-floppy-open"></span>
-					  </button>
-					</li>
-					<li class="nav-item">
-					  <button type="button" class="tool" data-toggle="tooltip" title="Сохранить как картинку" id="renderpng">
-					  	<span class="glyphicon glyphicon-save-file"></span>
-					  </button>
-					</li>
 					
 var ToolButtons = React.createClass({
 
