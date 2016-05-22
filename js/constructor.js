@@ -175,18 +175,20 @@ var ToolButtons = React.createClass({
 	},
 	
     render: function() {
-    
-    	var buttons = this.tools.map(function(tool) {
-    		return (<li class="nav-item">
-					  <button type="button" class="tool" data-toggle="tooltip" title="{tool.tooltip}" id="{tool.id}">
-					  	<span class="glyphicon {tool.glyphicon}"></span>
+    	var toolsarr = this.tools();
+    	var buttons = toolsarr.map(function(tool) {
+    		return (<li className="nav-item" key={tool.id}>
+					  <button type="button" className="tool" data-toggle="tooltip" title={tool.tooltip} id={tool.id}>
+					  	<span className="glyphicon {tool.glyphicon}"></span>
 					  </button>
 					</li>
 					);
     	});
-    	
+
     	return(
-			{buttons}
+    		<ul className="nav navbar-nav">
+				{buttons}
+			</ul>
 		);
 	}
 	
@@ -195,14 +197,14 @@ var ToolButtons = React.createClass({
 var Header = React.createClass({
     render: function() {
     	return(
-    		<nav class="navbar navbar-fixed rednav">
-			  <div class="container-fluid">
+    		<nav className="navbar navbar-fixed rednav">
+			  <div className="container-fluid">
 
-				<ul class="nav navbar-nav">
+				
 
 					<ToolButtons />
 					
-				</ul>
+				
 			  </div>
 			</nav>
 		);
@@ -213,11 +215,11 @@ var Header = React.createClass({
 var Footer = React.createClass({
     render: function() {
     	return(
-			<footer class="footer">
-			  <div class="container">
+			<footer className="footer">
+			  <div className="container">
 			  
-				<div class="col-xs-12 col-sm-12 col-md-5 col-lg-4">
-					<div class="copyright">
+				<div className="col-xs-12 col-sm-12 col-md-5 col-lg-4">
+					<div className="copyright">
 						<a href="#">&copy; 2016 Mikhail Semochkin</a>
 					</div>
 				</div>  
@@ -232,9 +234,9 @@ var Body = React.createClass({
     render: function() {
     	return(
     		<div>
-				<div class="canvas" id="canvasDiv1"></div>
-				<div class="canvas" id="canvasDiv2"></div>
-				<div class="canvas" id="canvasDiv3"></div>
+				<div className="canvas" id="canvasDiv1"></div>
+				<div className="canvas" id="canvasDiv2"></div>
+				<div className="canvas" id="canvasDiv3"></div>
 			</div>
 		);
 	}
@@ -243,7 +245,7 @@ var Body = React.createClass({
 var EmptyContainer = React.createClass({
     render: function() {
     	return(
-			<div class="container">&nbsp;</div>
+			<div className="container">&nbsp;</div>
 		);
 	}
 });
@@ -300,7 +302,15 @@ var App = React.createClass({
     render: function() {
     	
 		return(
-		    <div className="row">
+		    <div>
+		    	
+		    	<Header />
+		    	<Body />
+		    	<EmptyContainer />
+		    	<Footer />
+		    	
+		    	
+		    	
 		        <button className="btn btn-default btn-block" onClick={this.handleShowModal}>Open Modal</button>
 		        {this.state.view.showModal ? <Modal handleHideModal={this.handleHideModal}/> : null}
 		    </div>
@@ -313,7 +323,7 @@ var App = React.createClass({
 
 ReactDOM.render(
 	<App />,
-	document.body
+	document.getElementById("appwrapper")
 );
 
 
