@@ -60,6 +60,7 @@ editor.activateTools = function() {
 }
 
 editor.useTool = function(tool) {
+	$("#modalOpener").click();
 	editor.tools[tool]();
 }
 
@@ -152,7 +153,7 @@ var ToolButtons = React.createClass({
 			},
 			{
 				tooltip: "Очистить все",
-				id: "clear",
+				id: "clearall",
 				glyphicon: "glyphicon glyphicon-trash"
 			},
 			{
@@ -167,7 +168,7 @@ var ToolButtons = React.createClass({
 			},
 			{
 				tooltip: "Сохранить как картинку",
-				id: "renderpng",
+				id: "render",
 				glyphicon: "glyphicon glyphicon-save-file"
 			}
 			
@@ -262,14 +263,14 @@ var Modal = React.createClass({
               <div className="modal-content">
                 <div className="modal-header">
                   <button type="button" className="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                  <h4 className="modal-title">Modal title</h4>
+                  <h4 className="modal-title" id="modalTitle"></h4>
                 </div>
-                <div className="modal-body">
-                  <p>One fine body&hellip;</p>
+                <div className="modal-body" id="modalBody">
+                  
                 </div>
                 <div className="modal-footer">
-                  <button type="button" className="btn btn-default" data-dismiss="modal">Close</button>
-                  <button type="button" className="btn btn-primary">Save changes</button>
+                  <button type="button" className="btn btn-flat" data-dismiss="modal">Отмена</button>
+                  <button type="button" className="btn btn-flat">Готово</button>
                 </div>
               </div>
             </div>
@@ -297,6 +298,7 @@ var App = React.createClass({
     },
     componentDidMount: function() {        //Onload
         editor.init();
+        
     },
     
     
@@ -310,10 +312,10 @@ var App = React.createClass({
 		    	<EmptyContainer />
 		    	<Footer />
 		    	
-		    	
-		    	
-		        <button className="btn btn-default btn-block" onClick={this.handleShowModal}>Open Modal</button>
+		        <button className="hidden" id="modalOpener" onClick={this.handleShowModal}>Open Modal</button>
 		        {this.state.view.showModal ? <Modal handleHideModal={this.handleHideModal}/> : null}
+		        
+		        
 		    </div>
 		);
 	}

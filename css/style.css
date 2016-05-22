@@ -117,17 +117,20 @@ body {
 	color: #ffffff;
 	border-color: #B71C1C;
 }
-.modal-footer .btn-default {
+.modal-footer .btn-flat {
 	background-color: #B71C1C;
 	border-radius: 0px;
 	border: solid 2px #ffffff;
 	color: #ffffff;
+	transition: all 0.3s ease;
 }
-.modal-footer .btn-default:active {
-	background-color: #4db6ac;
-	border-radius: 0px;
-	border: solid 2px #ffffff;
-	color: #ffffff;
+.modal-footer .btn-flat:hover {
+	background-color: #ffffff;
+	color: #B71C1C;
+}
+.modal-footer .btn-flat:active {
+	background-color: #ffffff;
+	color: #B71C1C;
 }
 .modal-header .close {
 	color: #ffffff;
@@ -137,8 +140,19 @@ body {
 	color: #ffffff;
 	opacity: .99;
 }
+.modal-footer .btn+.btn {
+    margin-bottom: 0;
+    margin-left: 15px;
+}
 
+.right {
+	position: relative;
+	float: right;
+}
 
+.hidden {
+	display: none;
+}
 
 
 
