@@ -295,7 +295,7 @@ var App = React.createClass({
     handleShowModal: function() {
         this.setState({view: {showModal: true}})
     },
-    componentDidUpdate: function() {
+    componentDidMount: function() {        //Onload
         editor.init();
         console.log("Nya!");
     },
