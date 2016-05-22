@@ -297,8 +297,8 @@ var App = React.createClass({
     },
     componentDidMount: function() {        //Onload
         editor.init();
-        console.log("Nya!");
     },
+    
     
     render: function() {
     	
