@@ -128,47 +128,47 @@ var ToolButtons = React.createClass({
 			{
 				tooltip: "Добавить текст",
 				id: "addtext",
-				glyphicon: "glyphicon-font"
+				glyphicon: "glyphicon glyphicon-font"
 			},
 			{
 				tooltip: "Добавить картинку",
 				id: "addpicture",
-				glyphicon: "glyphicon-picture"
+				glyphicon: "glyphicon glyphicon-picture"
 			},
 			{
 				tooltip: "Цвет фона",
 				id: "color",
-				glyphicon: "glyphicon-tint"
+				glyphicon: "glyphicon glyphicon-tint"
 			},
 			{
 				tooltip: "Добавить фигуру",
 				id: "addfigure",
-				glyphicon: "glyphicon-stop"
+				glyphicon: "glyphicon glyphicon-stop"
 			},
 			{
 				tooltip: "Отменить последнее действие",
 				id: "undo",
-				glyphicon: "glyphicon-backward"
+				glyphicon: "glyphicon glyphicon-backward"
 			},
 			{
 				tooltip: "Очистить все",
 				id: "clear",
-				glyphicon: "glyphicon-trash"
+				glyphicon: "glyphicon glyphicon-trash"
 			},
 			{
 				tooltip: "Сохранить макет",
 				id: "save",
-				glyphicon: "glyphicon-floppy-save"
+				glyphicon: "glyphicon glyphicon-floppy-save"
 			},
 			{
 				tooltip: "Загрузить макет",
 				id: "load",
-				glyphicon: "glyphicon-floppy-open"
+				glyphicon: "glyphicon glyphicon-floppy-open"
 			},
 			{
 				tooltip: "Сохранить как картинку",
 				id: "renderpng",
-				glyphicon: "glyphicon-save-file"
+				glyphicon: "glyphicon glyphicon-save-file"
 			}
 			
 		];
@@ -179,7 +179,7 @@ var ToolButtons = React.createClass({
     	var buttons = toolsarr.map(function(tool) {
     		return (<li className="nav-item" key={tool.id}>
 					  <button type="button" className="tool" data-toggle="tooltip" title={tool.tooltip} id={tool.id}>
-					  	<span className="glyphicon {tool.glyphicon}"></span>
+					  	<span className={tool.glyphicon}></span>
 					  </button>
 					</li>
 					);
@@ -285,6 +285,7 @@ var Modal = React.createClass({
 
 
 var App = React.createClass({
+
     getInitialState: function() {
         return {view: {showModal: false}}
     },
@@ -316,6 +317,7 @@ var App = React.createClass({
 		    </div>
 		);
 	}
+	
 });
 
 
