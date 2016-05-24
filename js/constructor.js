@@ -96,6 +96,8 @@ editor.tools = {
 			$(this).css("font-family", $(this).text()); 
 		});
 		
+		//TODO: верстка диалога, .click на кнопку готово, цвет цекста с выбирателем цвета, рисование на предв. просм. канвасе.
+		
 	},
 	
 	addpicture: function() {
@@ -161,7 +163,7 @@ var Addtext = React.createClass({
 				
 				<div className="col-xs-8 col-sm-6 col-md-6 col-lg-4 smallinput">
 
-					  <Fonts />
+					  <Fonts fonts={resources.fonts} />
 					    
 				</div>
 				
@@ -185,115 +187,131 @@ var Addtext = React.createClass({
 
 */
 
+
+//------------------ resources --------------------
+
+var resources = {};
+
+resources.fonts = [
+	'Georgia, serif',
+	'"Palatino Linotype", "Book Antiqua", Palatino, serif',
+	'"Times New Roman", Times, serif',
+	'Arial, Helvetica, sans-serif',
+	'"Arial Black", Gadget, sans-serif',
+	'"Comic Sans MS", cursive, sans-serif',
+	'Impact, Charcoal, sans-serif',
+	'"Lucida Sans Unicode", "Lucida Grande", sans-serif',
+	'Tahoma, Geneva, sans-serif',
+	'"Trebuchet MS", Helvetica, sans-serif',
+	'Verdana, Geneva, sans-serif',
+	'"Courier New", Courier, monospace',
+	'"Lucida Console", Monaco, monospace'
+];
+
+resources.tools = [
+	{
+		tooltip: "Добавить текст",
+		id: "addtext",
+		glyphicon: "glyphicon glyphicon-font"
+	},
+	{
+		tooltip: "Добавить картинку",
+		id: "addpicture",
+		glyphicon: "glyphicon glyphicon-picture"
+	},
+	{
+		tooltip: "Цвет фона",
+		id: "color",
+		glyphicon: "glyphicon glyphicon-tint"
+	},
+	{
+		tooltip: "Добавить фигуру",
+		id: "addfigure",
+		glyphicon: "glyphicon glyphicon-stop"
+	},
+	{
+		tooltip: "Отменить последнее действие",
+		id: "undo",
+		glyphicon: "glyphicon glyphicon-backward"
+	},
+	{
+		tooltip: "Очистить все",
+		id: "clearall",
+		glyphicon: "glyphicon glyphicon-trash"
+	},
+	{
+		tooltip: "Сохранить макет",
+		id: "save",
+		glyphicon: "glyphicon glyphicon-floppy-save"
+	},
+	{
+		tooltip: "Загрузить макет",
+		id: "load",
+		glyphicon: "glyphicon glyphicon-floppy-open"
+	},
+	{
+		tooltip: "Сохранить как картинку",
+		id: "render",
+		glyphicon: "glyphicon glyphicon-save-file"
+	}
+	
+];
+
+
+
+
+
 //-------------- tool dialogs classes -------------
 
+var ListItemWrapper = React.createClass ({
+	render: function() {
+		console.log(this.props.classname);
+		return (<li className={this.props.classname}>{this.props.item}</li>);
+	}
+});
+
+var SelectItemWrapper = React.createClass ({
+	render: function() {
+		return (<option className={this.props.classname}>{this.props.item}</option>);
+	}
+});
+
+
 var Fonts = React.createClass({
-
-	fonts: function() {
-		return [
-			'Georgia, serif',
-			'"Palatino Linotype", "Book Antiqua", Palatino, serif',
-			'"Times New Roman", Times, serif',
-			'Arial, Helvetica, sans-serif',
-			'"Arial Black", Gadget, sans-serif',
-			'"Comic Sans MS", cursive, sans-serif',
-			'Impact, Charcoal, sans-serif',
-			'"Lucida Sans Unicode", "Lucida Grande", sans-serif',
-			'Tahoma, Geneva, sans-serif',
-			'"Trebuchet MS", Helvetica, sans-serif',
-			'Verdana, Geneva, sans-serif',
-			'"Courier New", Courier, monospace',
-			'"Lucida Console", Monaco, monospace'
-		];
-	},
-	
     render: function() {
-    	var fontsarr = this.fonts();
-    	var fontlist = fontsarr.map(function(font) {
-    		return (<option value={font} key={font} className="fontlist">
-					  {font}
-					</option>
-					);
-    	});
-
     	return(
     		<select className="form-control">
-				{fontlist}
+    		
+    			
+				{this.props.fonts.map(function(font) {
+					return (<SelectItemWrapper key={font} classname="fontlist" item={font} />);
+				})}
+        
 			</select>
 		);
 	}
 	
 });
 
-//-------------------------------------------------
+
+
+//---------- main components classes ------------
 
 var ToolButtons = React.createClass({
-
-	tools: function() {
-		return [
-			{
-				tooltip: "Добавить текст",
-				id: "addtext",
-				glyphicon: "glyphicon glyphicon-font"
-			},
-			{
-				tooltip: "Добавить картинку",
-				id: "addpicture",
-				glyphicon: "glyphicon glyphicon-picture"
-			},
-			{
-				tooltip: "Цвет фона",
-				id: "color",
-				glyphicon: "glyphicon glyphicon-tint"
-			},
-			{
-				tooltip: "Добавить фигуру",
-				id: "addfigure",
-				glyphicon: "glyphicon glyphicon-stop"
-			},
-			{
-				tooltip: "Отменить последнее действие",
-				id: "undo",
-				glyphicon: "glyphicon glyphicon-backward"
-			},
-			{
-				tooltip: "Очистить все",
-				id: "clearall",
-				glyphicon: "glyphicon glyphicon-trash"
-			},
-			{
-				tooltip: "Сохранить макет",
-				id: "save",
-				glyphicon: "glyphicon glyphicon-floppy-save"
-			},
-			{
-				tooltip: "Загрузить макет",
-				id: "load",
-				glyphicon: "glyphicon glyphicon-floppy-open"
-			},
-			{
-				tooltip: "Сохранить как картинку",
-				id: "render",
-				glyphicon: "glyphicon glyphicon-save-file"
-			}
-			
-		];
-	},
 	
     render: function() {
-    	var toolsarr = this.tools();
-    	var buttons = toolsarr.map(function(tool) {
-    		return (<li className="nav-item" key={tool.id}>
-					  <button type="button" className="tool" data-toggle="tooltip" title={tool.tooltip} id={tool.id}>
-					  	<span className={tool.glyphicon}></span>
-					  </button>
-					</li>
-					);
-    	});
-
     	return(
     		<ul className="nav navbar-nav">
-				{buttons}
+				
+				{this.props.tools.map(function(tool) {
+					return (
+						<li className="nav-item" key={tool.id}>
+						  <button type="button" className="tool" data-toggle="tooltip" title={tool.tooltip} id={tool.id}>
+						  	<span className={tool.glyphicon}></span>
+						  </button>
+						</li>);
+				})}
+				
 			</ul>
 		);
 	}
@@ -302,13 +320,17 @@ var ToolButtons = React.createClass({
 
 
 
+
+//---------------- main components -----------------
+
+
 var Header = React.createClass({
     render: function() {
     	return(
     		<nav className="navbar navbar-fixed rednav">
 			  <div className="container-fluid">
 
-					<ToolButtons />
+					<ToolButtons tools={resources.tools} />
 					
 			  </div>
 			</nav>
