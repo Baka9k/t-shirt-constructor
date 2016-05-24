@@ -265,7 +265,6 @@ resources.tools = [
 
 var ListItemWrapper = React.createClass ({
 	render: function() {
-		console.log(this.props.classname);
 		return (<li className={this.props.classname}>{this.props.item}</li>);
 	}
 });
