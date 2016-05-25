@@ -99,6 +99,9 @@ editor.tools = {
 		$("#cleartext").click(function() {
 			$("#text").val(""); 
 		});
+		$("#colorpicker").spectrum({
+    		color: "#000000",
+		});
 		
 		
 		
@@ -178,7 +181,14 @@ var Addtext = React.createClass({
 				</div>
 				
 				<div className="container-fluid">
+					<div className="smallinput">
 					
+						<ColorPicker />
+					
+					</div>
+					<div className="smallinput">
+						Выберите цвет текста
+					</div>
 				</div>
 				
 				<div className="container-fluid">
@@ -195,13 +205,7 @@ var Addtext = React.createClass({
 });
 
 
-/*    			<label for="text">Добавить текст</label>
-				<div className="input-group">
-				  <input type="text" className="form-control" placeholder="Введите текст" />
-				  <span className="input-group-addon" id="text">@example.com</span>
-				</div>
 
-*/
 
 
 //------------------ resources --------------------
@@ -293,6 +297,7 @@ var SelectItemWrapper = React.createClass ({
 
 
 var Fonts = React.createClass({
+
     render: function() {
     	return(
     		<select className="form-control select">
@@ -306,6 +311,17 @@ var Fonts = React.createClass({
 		);
 	}
 	
+});
+
+
+var ColorPicker = React.createClass ({
+
+	render: function() {
+    	return(
+    		<input type='text' id="colorpicker" />
+    	);
+    }
+    
 });
 
 
