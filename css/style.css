@@ -154,15 +154,19 @@ body {
 	display: none;
 }
 
-.input-group {
-	margin: 10px;
+.input-group, select {
+	margin: 8px;
+}
+select {
+	width: calc(100% - 16px) !important;
 }
 
 .smallinput {
 	margin-right: 0px;
 	margin-left: 0px;
-	padding: 5px;
+	padding: 0px;
 }
+
 
 .preview {
 	

@@ -96,7 +96,11 @@ editor.tools = {
 			$(this).css("font-family", $(this).text()); 
 		});
 		
-		//TODO: верстка диалога, .click на кнопку готово, цвет цекста с выбирателем цвета, рисование на предв. просм. канвасе.
+		$("#cleartext").click(function() {
+			$("#text").val(""); 
+		});
+		
+		
 		
 	},
 	
@@ -146,32 +150,44 @@ editor.tools = {
 //--------------- tool dialogs -------------------
 
 var Addtext = React.createClass({
+
     render: function() {
     	return(
     		<div>
     			
-				<div className="input-group">
-				  <input type="text" className="form-control" placeholder="Введите текст" />
-				</div>
-				
-				<div className="col-xs-8 col-sm-6 col-md-6 col-lg-4 smallinput">
+    			<div className="container-fluid">
 					<div className="input-group">
-					  <input type="text" className="form-control" placeholder="Введите размер шрифта" />
-					  <span className="input-group-addon" id="fontsize">px</span>
+					  <input type="text" className="form-control" placeholder="Введите текст" aria-describedby="cleartext" id="text" />
+					  <span className="input-group-addon" id="cleartext"><span className="glyphicon glyphicon-remove-circle"></span></span>
 					</div>
 				</div>
 				
-				<div className="col-xs-8 col-sm-6 col-md-6 col-lg-4 smallinput">
+				<div className="container-fluid">
+					<div className="col-xs-6 col-sm-6 col-md-6 col-lg-4 smallinput">
+						<div className="input-group">
+						  <input type="text" className="form-control" placeholder="Введите размер шрифта" />
+						  <span className="input-group-addon" id="fontsize">px</span>
+						</div>
+					</div>
+				
+					<div className="col-xs-6 col-sm-6 col-md-6 col-lg-8 smallinput">
 
-					  <Fonts fonts={resources.fonts} />
-					    
+						  <Fonts fonts={resources.fonts} />
+							
+					</div>			
 				</div>
 				
-				<div className="col-xs-12 col-sm-12 col-md-12 col-lg-10 preview">
-					<canvas id = "preview" /> 
-				</div>				
-
+				<div className="container-fluid">
+					
+				</div>
 				
+				<div className="container-fluid">
+					<div className="col-xs-12 col-sm-12 col-md-12 col-lg-10 preview">
+						<canvas id = "preview" /> 
+					</div>	
+				</div>
+				
+
 				
     		</div>
 		);
@@ -279,7 +295,7 @@ var SelectItemWrapper = React.createClass ({
 var Fonts = React.createClass({
     render: function() {
     	return(
-    		<select className="form-control">
+    		<select className="form-control select">
     		
     			
 				{this.props.fonts.map(function(font) {
