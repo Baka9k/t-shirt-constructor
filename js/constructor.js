@@ -99,9 +99,6 @@ editor.tools = {
 			$(this).css("font-family", $(this).text()); 
 		});
 		
-		$("#cleartext").click(function() {
-			$("#text").val(""); 
-		});
 		$("#colorpicker").spectrum({
     		color: "#000000",
     		cancelText: "Отмена",
@@ -163,7 +160,6 @@ var history = [];
 //----------------- tool dialogs --------------------
 
 var Addtext = React.createClass({
-
     render: function() {
     	return(
     		<div>
@@ -183,7 +179,7 @@ var Addtext = React.createClass({
 				
 					<div className="col-xs-6 col-sm-6 col-md-6 col-lg-8 smallinput">
 
-						  <Fonts fonts={resources.fonts} />
+						  <FontList fonts={resources.fonts} />
 							
 					</div>			
 				</div>
@@ -206,8 +202,6 @@ var Addtext = React.createClass({
 						
 					</div>	
 				</div>
-				
-
 				
     		</div>
 		);
@@ -299,6 +293,7 @@ var ListItemWrapper = React.createClass ({
 	}
 });
 
+
 var SelectItemWrapper = React.createClass ({
 	render: function() {
 		return (<option className={this.props.classname}>{this.props.item}</option>);
@@ -308,23 +303,30 @@ var SelectItemWrapper = React.createClass ({
 
 
 var TextArea = React.createClass({
-
+	getInitialState: function() {
+		return {value: ""};
+	},
+	handleChange: function(event) {
+		this.setState({value: event.target.value});
+	},
+	clearall: function() {
+		this.replaceState({value: "Nya"});
+		console.log("clearall called");
+	},
     render: function() {
     	return(
 			<div className="input-group">
-				<input type="text" className="form-control" placeholder="Введите текст" aria-describedby="cleartext" id="text" />
-				<span className="input-group-addon" id="cleartext">
+				<input type="text" className="form-control" placeholder="Введите текст" aria-describedby="cleartext" onChange={this.handleChange} id="text" />
+				<span className="input-group-addon" onClick={this.clearall} id="cleartext" >
 					<span className="glyphicon glyphicon-remove-circle"></span>
 				</span>
 			</div>
 		);
 	}
-	
 });
 
 
-var Fonts = React.createClass({
-
+var FontList = React.createClass({
     render: function() {
     	return(
     		<select className="form-control select">
@@ -337,12 +339,10 @@ var Fonts = React.createClass({
 			</select>
 		);
 	}
-	
 });
 
 
 var FontSizePicker = React.createClass ({
-	
 	render: function() {
 		return(
 			<div className="input-group">
@@ -351,29 +351,24 @@ var FontSizePicker = React.createClass ({
 			</div>
 		);
 	}
-	
 });
 
 
 var ColorPicker = React.createClass ({
-
 	render: function() {
     	return(
     		<input type='text' id="colorpicker" />
     	);
     }
-    
 });
 
 
 var PreviewCanvas = React.createClass ({
-
 	render: function() {
     	return(
     		<canvas id = "preview" />
     	);
     }
-    
 });
 
 
@@ -381,7 +376,6 @@ var PreviewCanvas = React.createClass ({
 //---------- main components classes -------------
 
 var ToolButtons = React.createClass({
-	
     render: function() {
     	return(
     		<ul className="nav navbar-nav">
@@ -398,7 +392,6 @@ var ToolButtons = React.createClass({
 			</ul>
 		);
 	}
-	
 });
 
 
@@ -494,6 +487,7 @@ var Modal = React.createClass({
 
 
 
+
 var App = React.createClass({
 
     getInitialState: function() {
@@ -507,7 +501,7 @@ var App = React.createClass({
     },
     componentDidMount: function() {        //Onload
         editor.init();
-        
+	     
     },
     
     render: function() {
