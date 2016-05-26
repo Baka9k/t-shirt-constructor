@@ -101,6 +101,8 @@ editor.tools = {
 		});
 		$("#colorpicker").spectrum({
     		color: "#000000",
+    		cancelText: "Отмена",
+        	chooseText: "Выбрать",
 		});
 		
 		
@@ -181,13 +183,13 @@ var Addtext = React.createClass({
 				</div>
 				
 				<div className="container-fluid">
-					<div className="smallinput">
+					<div className="colorpicker-label">
+						Выберите цвет текста
+					</div>
+					<div className="colorpicker">
 					
 						<ColorPicker />
 					
-					</div>
-					<div className="smallinput">
-						Выберите цвет текста
 					</div>
 				</div>
 				

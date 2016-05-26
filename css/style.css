@@ -167,6 +167,18 @@ select {
 	padding: 0px;
 }
 
+.colorpicker-label {
+	max-width: 250px;
+	position: relative;
+	float: left;
+	margin: 8px;
+}
+.colorpicker {
+	max-width: 100px;
+	position: relative;
+	float: left;
+	margin: 2px;
+}
 
 .preview {
 	
