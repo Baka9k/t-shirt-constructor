@@ -1,4 +1,4 @@
-//============================== JS to draw on canvas ========================
+//============================== EDITOR =============================
 
 var editor = {};
 
@@ -82,15 +82,18 @@ editor.init = function() {
 }
 
 
+
 //=============================== TOOLS ======================================
 
 editor.tools = {
 
 	addtext: function() {
+	
 		ReactDOM.render(
 			<Addtext />,
 			document.getElementById("modalBody")
 		);
+		$("#modalTitle").text("Добавить текст");
 		
 		$(".fontlist").each(function(index) {
 			$(this).css("font-family", $(this).text()); 
@@ -145,6 +148,11 @@ editor.tools = {
 
 
 
+//=============================  HISTORY  =====================================
+
+var history = [];
+
+
 
 
 //==============================  REACT  =======================================
@@ -152,7 +160,7 @@ editor.tools = {
 					
 
 
-//--------------- tool dialogs -------------------
+//----------------- tool dialogs --------------------
 
 var Addtext = React.createClass({
 
@@ -161,18 +169,16 @@ var Addtext = React.createClass({
     		<div>
     			
     			<div className="container-fluid">
-					<div className="input-group">
-					  <input type="text" className="form-control" placeholder="Введите текст" aria-describedby="cleartext" id="text" />
-					  <span className="input-group-addon" id="cleartext"><span className="glyphicon glyphicon-remove-circle"></span></span>
-					</div>
+					
+					<TextArea />
+					
 				</div>
 				
 				<div className="container-fluid">
 					<div className="col-xs-6 col-sm-6 col-md-6 col-lg-4 smallinput">
-						<div className="input-group">
-						  <input type="text" className="form-control" placeholder="Введите размер шрифта" />
-						  <span className="input-group-addon" id="fontsize">px</span>
-						</div>
+						
+						<FontSizePicker />
+						
 					</div>
 				
 					<div className="col-xs-6 col-sm-6 col-md-6 col-lg-8 smallinput">
@@ -195,7 +201,9 @@ var Addtext = React.createClass({
 				
 				<div className="container-fluid">
 					<div className="col-xs-12 col-sm-12 col-md-12 col-lg-10 preview">
-						<canvas id = "preview" /> 
+						
+						<PreviewCanvas />
+						
 					</div>	
 				</div>
 				
@@ -298,6 +306,23 @@ var SelectItemWrapper = React.createClass ({
 });
 
 
+
+var TextArea = React.createClass({
+
+    render: function() {
+    	return(
+			<div className="input-group">
+				<input type="text" className="form-control" placeholder="Введите текст" aria-describedby="cleartext" id="text" />
+				<span className="input-group-addon" id="cleartext">
+					<span className="glyphicon glyphicon-remove-circle"></span>
+				</span>
+			</div>
+		);
+	}
+	
+});
+
+
 var Fonts = React.createClass({
 
     render: function() {
@@ -316,6 +341,20 @@ var Fonts = React.createClass({
 });
 
 
+var FontSizePicker = React.createClass ({
+	
+	render: function() {
+		return(
+			<div className="input-group">
+				<input type="text" className="form-control" placeholder="Введите размер шрифта" />
+				<span className="input-group-addon" id="fontsize">px</span>
+			</div>
+		);
+	}
+	
+});
+
+
 var ColorPicker = React.createClass ({
 
 	render: function() {
@@ -327,8 +366,19 @@ var ColorPicker = React.createClass ({
 });
 
 
+var PreviewCanvas = React.createClass ({
 
-//---------- main components classes ------------
+	render: function() {
+    	return(
+    		<canvas id = "preview" />
+    	);
+    }
+    
+});
+
+
+
+//---------- main components classes -------------
 
 var ToolButtons = React.createClass({
 	

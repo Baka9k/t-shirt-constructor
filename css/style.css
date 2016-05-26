@@ -167,6 +167,10 @@ select {
 	padding: 0px;
 }
 
+#cleartext {
+	cursor: pointer;
+}
+
 .colorpicker-label {
 	max-width: 250px;
 	position: relative;
