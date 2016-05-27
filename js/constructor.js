@@ -67,7 +67,6 @@ editor.useTool = function(tool) {
 
 
 
-
 editor.init = function() {
 	editor.preparePage();
 	editor.canvases.front = editor.createCanvas(document.getElementById("canvasDiv1"));
@@ -81,6 +80,36 @@ editor.init = function() {
 	editor.activateTools();
 }
 
+
+
+//====================================================================
+
+var PIXEL_RATIO = (function () {
+    var ctx = document.createElement("canvas").getContext("2d"),
+        dpr = window.devicePixelRatio || 1,
+        bsr = ctx.webkitBackingStorePixelRatio ||
+              ctx.mozBackingStorePixelRatio ||
+              ctx.msBackingStorePixelRatio ||
+              ctx.oBackingStorePixelRatio ||
+              ctx.backingStorePixelRatio || 1;
+
+    return dpr / bsr;
+})();
+
+
+var createHiDPICanvas = function(w, h, ratio) {
+    if (!ratio) { ratio = PIXEL_RATIO; }
+    var can = document.createElement("canvas");
+    can.width = w * ratio;
+    can.height = h * ratio;
+    can.style.width = w + "px";
+    can.style.height = h + "px";
+    can.getContext("2d").setTransform(ratio, 0, 0, ratio, 0, 0);
+    return can;
+}
+
+//Create canvas with the device resolution.
+//var myCanvas = createHiDPICanvas(500, 250);
 
 
 //=============================== TOOLS ======================================
@@ -172,15 +201,51 @@ history.newEntry = function(tool, content, x, y, sizeX, sizeY) {
 
 //==============================  REACT  =======================================
 
-					
+//TODO: canvas1, canvas2, canvas3 to HiDPI canvases				
 
 
 //----------------- tool dialogs --------------------
 
 var Addtext = React.createClass({
+	
+	componentDidMount: function() {
+		//var width = $("#previewDiv").width();
+		//var height = $("#previewDiv").height();
+		//console.log($("#previewDiv").outerWidth());
+		var canvas = createHiDPICanvas(500,300);//width, height);
+		canvas.id = "preview";
+		$(canvas).appendTo("#previewDiv");
+		this.updatePreview();
+	},
+	
+	handleChange: function() {
+		this.updatePreview();
+	},
+	
+	updatePreview: function() {
+		var canvas = document.getElementById("preview");
+		var context = canvas.getContext("2d");
+		var text = $("#text").val();
+		var font = $("#fontpicker").val();
+		var size = $("#sizepicker").val();
+		var color = $("#colorpicker").val();
+		
+		var textWidth = context.measureText(text).width;
+		var textHeight = size;
+		var x = canvas.width / 2 - textWidth / 2;
+		var y = canvas.height / 2 - textHeight / 2;
+		//console.log(x,y);
+		
+		context.clearRect(0, 0, canvas.width, canvas.height);
+		
+		context.font = size + "px " + font;
+		context.fillStyle = color;
+		context.fillText(text, x, y);
+	},
+
     render: function() {
     	return(
-    		<div>
+    		<div onChange={this.handleChange}>
     			
     			<div className="container-fluid">
 					
@@ -214,9 +279,8 @@ var Addtext = React.createClass({
 				</div>
 				
 				<div className="container-fluid">
-					<div className="col-xs-12 col-sm-12 col-md-12 col-lg-10 preview">
+					<div className="col-xs-12 col-sm-12 col-md-12 col-lg-10 preview" id="previewDiv">
 						
-						<PreviewCanvas />
 						
 					</div>	
 				</div>
@@ -224,6 +288,7 @@ var Addtext = React.createClass({
     		</div>
 		);
 	}
+	
 });
 
 
@@ -378,14 +443,12 @@ var FontList = React.createClass({
 	
 	handleChange: function(event) {
 		this.setState({value: event.target.value});
-		console.log(this.state);
 	},
 	
     render: function() {
     	var currentFont = this.state.value;
-    	console.log(currentFont);
     	return(
-    		<select value={currentFont} onChange={this.handleChange} className="form-control select">
+    		<select value={currentFont} onChange={this.handleChange} className="form-control select" id="fontpicker">
     			
 				{this.props.fonts.map(function(font) {
 					return (
@@ -407,11 +470,29 @@ var FontList = React.createClass({
 
 var FontSizePicker = React.createClass ({
 
+	getInitialState: function() {
+		return {value: "18"};
+	},
+	
+	handleChange: function(event) {
+		this.setState({value: event.target.value});
+	},
+	
 	render: function() {
+		var text = this.state.value;
 		return(
 			<div className="input-group">
-				<input type="text" className="form-control" placeholder="Введите размер шрифта" />
-				<span className="input-group-addon" id="fontsize">px</span>
+			
+				<
+					input type = "text"
+					className = "form-control"
+					placeholder = "Введите размер шрифта"
+					onChange = {this.handleChange}
+					value = {text}
+					id="sizepicker"
+				/>
+				
+				<span className="input-group-addon">px</span>
 			</div>
 		);
 	}
@@ -430,15 +511,6 @@ var ColorPicker = React.createClass ({
 });
 
 
-var PreviewCanvas = React.createClass ({
-
-	render: function() {
-    	return(
-    		<canvas id = "preview" />
-    	);
-    }
-    
-});
 
 
 

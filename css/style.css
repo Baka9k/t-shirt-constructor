@@ -184,10 +184,10 @@ select {
 	margin: 2px;
 }
 
-
-#preview {
+.preview {
 	width: 100%;
-	min-height: 80px;
+	min-height: 90px;
+	padding: 0px;
 }
 
 
