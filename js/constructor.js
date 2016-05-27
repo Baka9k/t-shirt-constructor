@@ -310,13 +310,13 @@ var TextArea = React.createClass({
 		this.setState({value: event.target.value});
 	},
 	clearall: function() {
-		this.replaceState({value: "Nya"});
-		console.log("clearall called");
+		this.setState({value: ""});
 	},
     render: function() {
+    	var text = this.state.value;
     	return(
 			<div className="input-group">
-				<input type="text" className="form-control" placeholder="Введите текст" aria-describedby="cleartext" onChange={this.handleChange} id="text" />
+				<input type="text" value={text} className="form-control" placeholder="Введите текст" aria-describedby="cleartext" onChange={this.handleChange} id="text" />
 				<span className="input-group-addon" onClick={this.clearall} id="cleartext" >
 					<span className="glyphicon glyphicon-remove-circle"></span>
 				</span>
