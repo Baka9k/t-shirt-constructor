@@ -147,7 +147,25 @@ editor.tools = {
 
 //=============================  HISTORY  =====================================
 
-var history = [];
+var history = {};
+
+history.changes = [];
+
+var Change = function (tool, content, x, y, sizeX, sizeY) {
+	this.tool = tool;
+	this.content = content;
+	this.x = x;
+	this.y = y;
+	this.sizeX = sizeX;
+	this.sizeY = sizeY;
+	return this;
+}
+
+history.newEntry = function(tool, content, x, y, sizeX, sizeY) {
+	var entry = new Change (tool, content, x, y, sizeX, sizeY);
+	history.changes.push(entry);
+}
+
 
 
 
@@ -288,38 +306,64 @@ resources.tools = [
 //-------------- tool dialogs classes -------------
 
 var ListItemWrapper = React.createClass ({
+
 	render: function() {
-		return (<li className={this.props.classname}>{this.props.item}</li>);
+		return (
+			<li className={this.props.classname}>
+				{this.props.item}
+			</li>
+		);
 	}
+	
 });
 
 
 var SelectItemWrapper = React.createClass ({
+
 	render: function() {
-		return (<option className={this.props.classname}>{this.props.item}</option>);
+		return (
+			<option className={this.props.classname} value={this.props.item}>
+				{this.props.item}
+			</option>);
 	}
+	
 });
 
 
 
 var TextArea = React.createClass({
+
 	getInitialState: function() {
 		return {value: ""};
 	},
+	
 	handleChange: function(event) {
 		this.setState({value: event.target.value});
 	},
+	
 	clearall: function() {
 		this.setState({value: ""});
 	},
+	
     render: function() {
     	var text = this.state.value;
     	return(
 			<div className="input-group">
-				<input type="text" value={text} className="form-control" placeholder="Введите текст" aria-describedby="cleartext" onChange={this.handleChange} id="text" />
-				<span className="input-group-addon" onClick={this.clearall} id="cleartext" >
+			
+				<
+					input type = "text"
+					className = "form-control"
+					placeholder = "Введите текст"
+					aria-describedby = "cleartext"
+					id = "text"
+					onChange = {this.handleChange}
+					value = {text}
+				/>
+				
+				<span className="input-group-addon" onClick={this.clearall} id="cleartext">
 					<span className="glyphicon glyphicon-remove-circle"></span>
 				</span>
+				
 			</div>
 		);
 	}
@@ -327,22 +371,42 @@ var TextArea = React.createClass({
 
 
 var FontList = React.createClass({
+
+	getInitialState: function() {
+		return {value: this.props.fonts[0]};
+	},
+	
+	handleChange: function(event) {
+		this.setState({value: event.target.value});
+		console.log(this.state);
+	},
+	
     render: function() {
+    	var currentFont = this.state.value;
+    	console.log(currentFont);
     	return(
-    		<select className="form-control select">
-    		
+    		<select value={currentFont} onChange={this.handleChange} className="form-control select">
     			
 				{this.props.fonts.map(function(font) {
-					return (<SelectItemWrapper key={font} classname="fontlist" item={font} />);
+					return (
+						<
+							SelectItemWrapper
+							key = {font}
+							classname = "fontlist"
+							item = {font}
+						/>
+					);
 				})}
-        
+				
 			</select>
 		);
 	}
+	
 });
 
 
 var FontSizePicker = React.createClass ({
+
 	render: function() {
 		return(
 			<div className="input-group">
@@ -351,24 +415,29 @@ var FontSizePicker = React.createClass ({
 			</div>
 		);
 	}
+	
 });
 
 
 var ColorPicker = React.createClass ({
+
 	render: function() {
     	return(
     		<input type='text' id="colorpicker" />
     	);
     }
+    
 });
 
 
 var PreviewCanvas = React.createClass ({
+
 	render: function() {
     	return(
     		<canvas id = "preview" />
     	);
     }
+    
 });
 
 
@@ -376,6 +445,7 @@ var PreviewCanvas = React.createClass ({
 //---------- main components classes -------------
 
 var ToolButtons = React.createClass({
+
     render: function() {
     	return(
     		<ul className="nav navbar-nav">
@@ -392,6 +462,7 @@ var ToolButtons = React.createClass({
 			</ul>
 		);
 	}
+	
 });
 
 
@@ -401,6 +472,7 @@ var ToolButtons = React.createClass({
 
 
 var Header = React.createClass({
+
     render: function() {
     	return(
     		<nav className="navbar navbar-fixed rednav">
@@ -412,10 +484,12 @@ var Header = React.createClass({
 			</nav>
 		);
 	}
+	
 });
 
 
 var Footer = React.createClass({
+
     render: function() {
     	return(
 			<footer className="footer">
@@ -431,9 +505,12 @@ var Footer = React.createClass({
 			</footer>
 		);
 	}
+	
 });
 
+
 var Body = React.createClass({
+
     render: function() {
     	return(
     		<div>
@@ -443,21 +520,28 @@ var Body = React.createClass({
 			</div>
 		);
 	}
+	
 });
 
+
 var EmptyContainer = React.createClass({
+
     render: function() {
     	return(
 			<div className="container">&nbsp;</div>
 		);
 	}
+	
 });
 
+
 var Modal = React.createClass({
+
     componentDidMount: function() {
         $(ReactDOM.findDOMNode(this)).modal('show');
         $(ReactDOM.findDOMNode(this)).on('hidden.bs.modal', this.props.handleHideModal);
     },
+    
     render: function() {
         return (
           <div className="modal fade">
@@ -479,9 +563,11 @@ var Modal = React.createClass({
           </div>
         )
     },
+    
     propTypes: {
         handleHideModal: React.PropTypes.func.isRequired
     }
+    
 });
 
 
