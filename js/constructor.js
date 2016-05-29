@@ -82,7 +82,7 @@ editor.init = function() {
 
 
 
-//====================================================================
+//================================ UTILS ===================================
 
 var PIXEL_RATIO = (function () {
     var ctx = document.createElement("canvas").getContext("2d"),
@@ -117,12 +117,23 @@ var createHiDPICanvas = function(w, h, ratio) {
 editor.tools = {
 
 	addtext: function() {
-	
+		
+		$("#modalTitle").text("Добавить текст");
+		
 		ReactDOM.render(
 			<Addtext />,
 			document.getElementById("modalBody")
 		);
-		$("#modalTitle").text("Добавить текст");
+		
+		$("#modal").on('shown.bs.modal', function() {
+			var width = $("#previewDiv").width();
+			var height = $("#previewDiv").height();
+			console.log(width, height);
+			var canvas = createHiDPICanvas(width, height);
+			canvas.id = "preview";
+			$(canvas).appendTo("#previewDiv");
+		});
+		
 		
 		$(".fontlist").each(function(index) {
 			$(this).css("font-family", $(this).text()); 
@@ -133,6 +144,8 @@ editor.tools = {
     		cancelText: "Отмена",
         	chooseText: "Выбрать",
 		});
+		
+		
 		
 		
 		
@@ -200,23 +213,12 @@ history.newEntry = function(tool, content, x, y, sizeX, sizeY) {
 
 
 //==============================  REACT  =======================================
-
-//TODO: canvas1, canvas2, canvas3 to HiDPI canvases				
+			
 
 
 //----------------- tool dialogs --------------------
 
 var Addtext = React.createClass({
-	
-	componentDidMount: function() {
-		//var width = $("#previewDiv").width();
-		//var height = $("#previewDiv").height();
-		//console.log($("#previewDiv").outerWidth());
-		var canvas = createHiDPICanvas(500,300);//width, height);
-		canvas.id = "preview";
-		$(canvas).appendTo("#previewDiv");
-		this.updatePreview();
-	},
 	
 	handleChange: function() {
 		this.updatePreview();
@@ -228,18 +230,18 @@ var Addtext = React.createClass({
 		var text = $("#text").val();
 		var font = $("#fontpicker").val();
 		var size = $("#sizepicker").val();
-		var color = $("#colorpicker").val();
+		var color = $("#colorpicker").spectrum('get');
 		
 		var textWidth = context.measureText(text).width;
 		var textHeight = size;
 		var x = canvas.width / 2 - textWidth / 2;
 		var y = canvas.height / 2 - textHeight / 2;
-		//console.log(x,y);
 		
 		context.clearRect(0, 0, canvas.width, canvas.height);
 		
 		context.font = size + "px " + font;
-		context.fillStyle = color;
+		if (color.toHexString) var hexColor = color.toHexString();
+		context.fillStyle = 0 || hexColor;
 		context.fillText(text, x, y);
 	},
 
@@ -249,7 +251,7 @@ var Addtext = React.createClass({
     			
     			<div className="container-fluid">
 					
-					<TextArea />
+					<TextArea updatePreview={this.updatePreview} />
 					
 				</div>
 				
@@ -616,7 +618,7 @@ var Modal = React.createClass({
     
     render: function() {
         return (
-          <div className="modal fade">
+          <div className="modal fade" id="modal">
             <div className="modal-dialog">
               <div className="modal-content">
                 <div className="modal-header">

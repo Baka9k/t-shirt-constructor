@@ -186,8 +186,9 @@ select {
 
 .preview {
 	width: 100%;
-	min-height: 90px;
+	min-height: 200px;
 	padding: 0px;
+	border: solid 1px red;
 }
 
 
