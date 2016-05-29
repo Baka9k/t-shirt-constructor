@@ -60,13 +60,22 @@ editor.activateTools = function() {
 }
 
 editor.useTool = function(tool) {
+	$("#preview")
+		.removeAttr("id")
+		.draggable("destroy")
+		.css("cursor", "auto");
+	
+	
 	$("#modalOpener").click();
 	editor.tools[tool]();
 }
 
 editor.previewToShirt = function() {
-	$("#preview").appendTo($("body")).center();
-	$("#preview").draggable();
+	$("#preview")
+		.appendTo($("body"))
+		.center()
+		.css("cursor", "move")
+		.draggable();
 	$("#modal").modal('hide');
 }
 
