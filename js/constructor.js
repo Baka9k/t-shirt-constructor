@@ -64,6 +64,12 @@ editor.useTool = function(tool) {
 	editor.tools[tool]();
 }
 
+editor.previewToShirt = function() {
+	$("#preview").appendTo($("body")).center();
+	$("#preview").draggable();
+	$("#modal").modal('hide');
+}
+
 
 
 
@@ -117,6 +123,15 @@ var triggerOnchange = function(element) {
 	element.dispatchEvent(event);
 }
 
+jQuery.fn.center = function() {
+    this.css("position","absolute");
+    this.css("top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) + 
+                                                $(window).scrollTop()) + "px");
+    this.css("left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) + 
+                                                $(window).scrollLeft()) + "px");
+    return this;
+}
+
 
 //=============================== TOOLS ======================================
 
@@ -158,6 +173,9 @@ editor.tools = {
 			triggerOnchange($("#hexcolor")[0]);
 		});
 		
+		$("#okbutton").click(function() {
+			editor.previewToShirt();
+		});
 		
 		
 		
@@ -651,7 +669,7 @@ var Modal = React.createClass({
                 </div>
                 <div className="modal-footer">
                   <button type="button" className="btn btn-flat" data-dismiss="modal">Отмена</button>
-                  <button type="button" className="btn btn-flat">Готово</button>
+                  <button type="button" className="btn btn-flat" id="okbutton">Готово</button>
                 </div>
               </div>
             </div>
