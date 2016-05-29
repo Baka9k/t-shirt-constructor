@@ -112,6 +112,12 @@ var createHiDPICanvas = function(w, h, ratio) {
 //var myCanvas = createHiDPICanvas(500, 250);
 
 
+var triggerOnchange = function(element) {
+	var event = new Event('input', { bubbles: true });
+	element.dispatchEvent(event);
+}
+
+
 //=============================== TOOLS ======================================
 
 editor.tools = {
@@ -128,7 +134,6 @@ editor.tools = {
 		$("#modal").on('shown.bs.modal', function() {
 			var width = $("#previewDiv").width();
 			var height = $("#previewDiv").height();
-			console.log(width, height);
 			var canvas = createHiDPICanvas(width, height);
 			canvas.id = "preview";
 			$(canvas).appendTo("#previewDiv");
@@ -143,6 +148,14 @@ editor.tools = {
     		color: "#000000",
     		cancelText: "Отмена",
         	chooseText: "Выбрать",
+			change: function(color){
+				$("#hexcolor").val(color.toHexString().substr(1,6));
+				triggerOnchange($("#hexcolor")[0]);
+			},
+		});
+		$("#hexcolor").change(function() {
+			$("#colorpicker").spectrum("set", $("#hexcolor").val());
+			triggerOnchange($("#hexcolor")[0]);
 		});
 		
 		
@@ -224,10 +237,11 @@ var Addtext = React.createClass({
 		this.updatePreview();
 	},
 	
-	updatePreview: function() {
+	updatePreview: function(clearall) {
 		var canvas = document.getElementById("preview");
 		var context = canvas.getContext("2d");
 		var text = $("#text").val();
+		if (clearall) text = "";
 		var font = $("#fontpicker").val();
 		var size = $("#sizepicker").val();
 		var color = $("#colorpicker").spectrum('get');
@@ -247,7 +261,7 @@ var Addtext = React.createClass({
 
     render: function() {
     	return(
-    		<div onChange={this.handleChange}>
+    		<div onChange={this.handleChange} id="addtext">
     			
     			<div className="container-fluid">
 					
@@ -277,6 +291,12 @@ var Addtext = React.createClass({
 					
 						<ColorPicker />
 					
+					</div>
+					<div>
+						<div className="input-group hexcolor">
+							<span className="input-group-addon">hex</span>
+							<input type = "text" className = "form-control" id="hexcolor" maxLength="6" />
+						</div>
 					</div>
 				</div>
 				
@@ -410,6 +430,7 @@ var TextArea = React.createClass({
 	
 	clearall: function() {
 		this.setState({value: ""});
+		this.props.updatePreview(true);
 	},
 	
     render: function() {
@@ -486,7 +507,7 @@ var FontSizePicker = React.createClass ({
 			<div className="input-group">
 			
 				<
-					input type = "text"
+					input type = "number"
 					className = "form-control"
 					placeholder = "Введите размер шрифта"
 					onChange = {this.handleChange}
