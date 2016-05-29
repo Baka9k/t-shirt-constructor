@@ -188,7 +188,8 @@ select {
 	width: 100%;
 	min-height: 200px;
 	padding: 0px;
-	border: solid 1px red;
+	border: solid 1px #B71C1C;
+	margin-top: 5px;
 }
 
 

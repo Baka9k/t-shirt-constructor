@@ -232,14 +232,14 @@ var Addtext = React.createClass({
 		var size = $("#sizepicker").val();
 		var color = $("#colorpicker").spectrum('get');
 		
+		context.font = size + "px " + font;
 		var textWidth = context.measureText(text).width;
 		var textHeight = size;
 		var x = canvas.width / 2 - textWidth / 2;
-		var y = canvas.height / 2 - textHeight / 2;
+		var y = canvas.height / 2 + textHeight / 2;
 		
 		context.clearRect(0, 0, canvas.width, canvas.height);
 		
-		context.font = size + "px " + font;
 		if (color.toHexString) var hexColor = color.toHexString();
 		context.fillStyle = 0 || hexColor;
 		context.fillText(text, x, y);
