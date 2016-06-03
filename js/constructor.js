@@ -48,7 +48,9 @@ editor.state = {
 
 
 editor.preparePage = function() {
+
 	//Set height of containers for 3 main canvases
+	
 	var width = $("#canvasDiv1").width();
 	var height = width / 0.96;
 	$("#canvasDiv1").height(height);
@@ -56,28 +58,34 @@ editor.preparePage = function() {
 	$("#canvasDiv3").height(height);
 	editor.variables.canvasWidth = width;
 	editor.variables.canvasHeight = height;
+	
 }
 
 
 editor.createCanvas = function(element) {
+
 	var canvas = document.createElement('canvas');
 	element.appendChild(canvas);
 	canvas.setAttribute('width', $(element).width());
 	canvas.setAttribute('height', element.style.height);
 	return canvas;
+	
 }
 
 
 editor.drawFill = function(color) {
+
 	for (var ctx in editor.contexts) {
 		var context = editor.contexts[ctx];
 		context.fillStyle = color;
 		context.fillRect(0, 0, editor.variables.canvasWidth, editor.variables.canvasHeight);
 	}
+	
 }
 
 
 editor.drawMasks = function() {
+
 	for (var ctx in editor.contexts) {
 		var texture = new Image();
 		texture.src = "images/" + ctx + ".png";
@@ -85,11 +93,14 @@ editor.drawMasks = function() {
 			editor.contexts[ctx].drawImage(texture,  0, 0, editor.variables.canvasWidth, editor.variables.canvasHeight);
 		} })(texture,ctx);
 	}
+	
 }
 
 
 editor.activateTools = function() {
+
 	//Add event listeners on tools buttons
+	
 	$(".tool").each(function(index) {
 		$(this).on("click", function() {
 		    editor.useTool($(this).attr('id')); 
@@ -98,22 +109,68 @@ editor.activateTools = function() {
 }
 
 
-editor.updateRelativeOffsets = function() {
-	//get absoluteX and absoluteY, sizeX and sizeY and return canvas, relativeX and relativeY, relativeSizeX and relativeSizeY
+editor.updateRelativeCoords = function() {
+
+	//get
+	//editor.state.absoluteX and editor.state.absoluteY, editor.state.sizeX and editor.state.sizeY
+	//set
+	//editor.state.canvas, editor.state.relativeX and editor.state.relativeY, 
+	//editor.state.relativeSizeX and editor.state.relativeSizeY
+	
+	var absX = editor.state.absoluteX;
+	var absY = editor.state.absoluteY;
+	var sizeX = editor.state.sizeX;
+	var sizeY = editor.state.sizeY;
+	
+	var centerX = absX + sizeX / 2;
+	var centerY = absY + sizeY / 2
+	
+	
+	//determine over which canvas preview is located
+	
+	var canvasList = {};
+	
+	for (var canvas in editor.canvases) {
+		var can = editor.canvases[canvas];
+		var c = {};
+		c.offset = absoluteOffset(can);
+		c.startX = c.offset.left;
+		c.startY = c.offset.top;
+		c.endX = c.startX + $(can).width();
+		c.endY = c.startY + $(can).height();
+		canvasList[canvas] = c;
+	}
+	
+	var canvas = "none";
+	
+	for (var c in canvasList) {
+		var can = canvasList[c];
+		console.log(can, centerX, centerY);
+		if ( (centerX >= can.startX) && (centerX <= can.endX)
+			  &&
+			 (centerY >= can.startY) && (centerY <= can.endY)
+		   ) {
+			canvas = c;
+			break;
+		}
+	}
+	
+	console.log(canvas);
+	
+	
+	
 }
 
 
 editor.toolUsed = function() {
-	//When new tool is picked, disable .draggable of current preview canvas and save changes made by the previous tool to history
-	console.log(history);
-	$("#preview")
-		.draggable("destroy")
-		.css("cursor", "auto")
-		.attr("id", editor.state.previewId);
+
+	//When new tool is picked, disable .draggable for current preview canvas and save changes made by the previous tool to history
+	
+	if (!$("#preview")[0]) return;
 		
-	var coords = absoluteOffset;
-	editor.state.absoluteX = coords.x;
-	editor.state.absoluteY = coords.y;
+	var coords = absoluteOffset($("#preview")[0]);
+	editor.state.absoluteX = coords.left;
+	editor.state.absoluteY = coords.top;
 	editor.updateRelativeCoords();
 	editor.state.sizeX = $("#" + editor.state.previewId).width();
 	editor.state.sizeY = $("#" + editor.state.previewId).height();
@@ -128,36 +185,44 @@ editor.toolUsed = function() {
 						editor.state.relativeSizeY,
 						editor.state.previewId
 					);
+					
 	editor.state.changes++;
+	
+	$("#preview")
+		.draggable("destroy")
+		.css("cursor", "auto")
+		.attr("id", editor.state.previewId);
+	
 }
 
 
 editor.useTool = function(tool) {
+	
 	editor.state.currentTool = tool;
-	if (editor.state.changes != 0) {
-		editor.toolUsed();
-	} else {
-		editor.state.changes++;
-	}
+	editor.toolUsed();
 	editor.state.previewId = Math.random().toString();
 	$("#modalOpener").click();
 	editor.tools[tool]();
+	
 }
 
 
 editor.previewToShirt = function() {
+
 	$("#preview")
 		.appendTo($("body"))
 		.center()
 		.css("cursor", "move")
 		.draggable();
 	$("#modal").modal('hide');
+	
 }
 
 
 
 
 editor.init = function() {
+
 	editor.preparePage();
 	editor.canvases.front = editor.createCanvas(document.getElementById("canvasDiv1"));
 	editor.canvases.rear = editor.createCanvas(document.getElementById("canvasDiv2"));
@@ -168,6 +233,7 @@ editor.init = function() {
 	editor.drawFill("#FF0000");
 	editor.drawMasks();
 	editor.activateTools();
+	
 }
 
 
@@ -179,7 +245,9 @@ The canvas element runs independent from the device or monitor's pixel ratio.
 On the iPad 3+, this ratio is 2. This essentially means that your 1000px width canvas would now need to fill 2000px to match it's stated width on the iPad display. Fortunately for us, this is done automatically by the browser. On the other hand, this is also the reason why you see less definition on images and canvas elements that were made to directly fit their visible area. Because your canvas only knows how to fill 1000px but is asked to draw to 2000px, the browser must now intelligently fill in the blanks between pixels to display the element at its proper size.
 */
 
+
 var PIXEL_RATIO = (function () {
+
     var ctx = document.createElement("canvas").getContext("2d"),
         dpr = window.devicePixelRatio || 1,
         bsr = ctx.webkitBackingStorePixelRatio ||
@@ -189,9 +257,12 @@ var PIXEL_RATIO = (function () {
               ctx.backingStorePixelRatio || 1;
 
     return dpr / bsr;
+    
 })();
 
+
 var createHiDPICanvas = function(w, h, ratio) {
+
     if (!ratio) { ratio = PIXEL_RATIO; }
     var can = document.createElement("canvas");
     can.width = w * ratio;
@@ -200,29 +271,37 @@ var createHiDPICanvas = function(w, h, ratio) {
     can.style.height = h + "px";
     can.getContext("2d").setTransform(ratio, 0, 0, ratio, 0, 0);
     return can;
+    
 }
+
 
 //Create canvas with the device resolution.
 //var myCanvas = createHiDPICanvas(500, 250);
 
 
+
 var triggerOnchange = function(element) {
+
 	var event = new Event('input', { bubbles: true });
 	element.dispatchEvent(event);
+	
 }
 
 
 jQuery.fn.center = function() {
+
     this.css("position","absolute");
     this.css("top", Math.max(0, (($(window).height() - $(this).outerHeight()) / 2) + 
                                                 $(window).scrollTop()) + "px");
     this.css("left", Math.max(0, (($(window).width() - $(this).outerWidth()) / 2) + 
                                                 $(window).scrollLeft()) + "px");
     return this;
+    
 }
 
 
 var absoluteOffset = function(element) {
+
     var top = 0, left = 0;
     do {
         top += element.offsetTop  || 0;
@@ -234,6 +313,7 @@ var absoluteOffset = function(element) {
         top: top,
         left: left
     };
+    
 };
 
 
@@ -278,7 +358,11 @@ editor.tools = {
 		});
 		
 		$("#okbutton").click(function() {
-			editor.previewToShirt();
+			if ($("#text").val() != "") {
+				editor.previewToShirt();
+			} else {
+				$("#modal").modal('hide');
+			}
 		});
 		
 		
@@ -330,7 +414,9 @@ var history = {};
 
 history.changes = [];
 
+
 var Change = function (tool, content, x, y, canvas, sizeX, sizeY, previewId) {
+
 	this.tool = tool;
 	this.content = content;
 	this.x = x;
@@ -339,11 +425,15 @@ var Change = function (tool, content, x, y, canvas, sizeX, sizeY, previewId) {
 	this.sizeY = sizeY;
 	this.previewId = previewId;
 	return this;
+	
 }
 
+
 history.newEntry = function(tool, content, x, y, canvas, sizeX, sizeY, previewId) {
+
 	var entry = new Change (tool, content, x, y, canvas, sizeX, sizeY, previewId);
 	history.changes.push(entry);
+	
 }
 
 
@@ -428,7 +518,7 @@ var Addtext = React.createClass({
 					</div>
 					<div>
 						<div className="input-group hexcolor">
-							<span className="input-group-addon">hex</span>
+							<span className="input-group-addon">#</span>
 							<input type = "text" className = "form-control" id="hexcolor" maxLength="6" />
 						</div>
 					</div>
@@ -704,7 +794,7 @@ var Header = React.createClass({
 
     render: function() {
     	return(
-    		<nav className="navbar navbar-fixed rednav">
+    		<nav className="navbar navbar-fixed-top rednav">
 			  <div className="container-fluid">
 
 					<ToolButtons tools={resources.tools} />
@@ -758,6 +848,17 @@ var EmptyContainer = React.createClass({
     render: function() {
     	return(
 			<div className="container">&nbsp;</div>
+		);
+	}
+	
+});
+
+
+var EmptyContainer3 = React.createClass({
+
+    render: function() {
+    	return(
+			<div className="container">&nbsp;<br />&nbsp;<br />&nbsp;</div>
 		);
 	}
 	
@@ -825,6 +926,7 @@ var App = React.createClass({
 		    <div>
 		    	
 		    	<Header />
+		    	<EmptyContainer3 />
 		    	<Body />
 		    	<EmptyContainer />
 		    	<Footer />
