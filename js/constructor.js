@@ -42,6 +42,11 @@ editor.state = {
 	previewId: "",
 	
 	changes: 0,
+	
+	
+	newPreviewId: function() {
+		editor.state.previewId = Math.random().toString();
+	},
 }
 
 	
@@ -110,7 +115,7 @@ editor.activateTools = function() {
 
 
 editor.updateRelativeCoords = function() {
-
+	
 	//get
 	//editor.state.absoluteX and editor.state.absoluteY, editor.state.sizeX and editor.state.sizeY
 	//set
@@ -145,7 +150,6 @@ editor.updateRelativeCoords = function() {
 	
 	for (var c in canvasList) {
 		var can = canvasList[c];
-		console.log(can, centerX, centerY);
 		if ( (centerX >= can.startX) && (centerX <= can.endX)
 			  &&
 			 (centerY >= can.startY) && (centerY <= can.endY)
@@ -155,7 +159,23 @@ editor.updateRelativeCoords = function() {
 		}
 	}
 	
-	console.log(canvas);
+	//"canvas" variable now is "none", "front", "rear" or "sides"
+	
+	
+	//calculate preview offset from this canvas
+	
+	var absOffsetX = 0;
+	var absOffsetY = 0;
+	
+	if (canvas != "none") {
+		var can = canvasList[canvas];
+		absOffsetX = absX - can.startX;
+		absOffsetY = absY - can.startY;
+	}
+	
+	
+	//and make them relative
+	
 	
 	
 	
@@ -171,9 +191,9 @@ editor.toolUsed = function() {
 	var coords = absoluteOffset($("#preview")[0]);
 	editor.state.absoluteX = coords.left;
 	editor.state.absoluteY = coords.top;
+	editor.state.sizeX = $("#preview").width();
+	editor.state.sizeY = $("#preview").height();
 	editor.updateRelativeCoords();
-	editor.state.sizeX = $("#" + editor.state.previewId).width();
-	editor.state.sizeY = $("#" + editor.state.previewId).height();
 	
 	history.newEntry(
 						editor.state.currentTool,
@@ -200,7 +220,7 @@ editor.useTool = function(tool) {
 	
 	editor.state.currentTool = tool;
 	editor.toolUsed();
-	editor.state.previewId = Math.random().toString();
+	editor.state.newPreviewId();
 	$("#modalOpener").click();
 	editor.tools[tool]();
 	
