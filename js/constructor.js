@@ -42,7 +42,7 @@ editor.state = {
 	previewId: "",
 	
 	changes: 0,
-	
+	noCanvasError: false,
 	
 	newPreviewId: function() {
 		editor.state.previewId = Math.random().toString();
@@ -55,7 +55,6 @@ editor.state = {
 editor.preparePage = function() {
 
 	//Set height of containers for 3 main canvases
-	
 	var width = $("#canvasDiv1").width();
 	var height = width / 0.96;
 	$("#canvasDiv1").height(height);
@@ -105,7 +104,6 @@ editor.drawMasks = function() {
 editor.activateTools = function() {
 
 	//Add event listeners on tools buttons
-	
 	$(".tool").each(function(index) {
 		$(this).on("click", function() {
 		    editor.useTool($(this).attr('id')); 
@@ -130,9 +128,7 @@ editor.updateRelativeCoords = function() {
 	var centerX = absX + sizeX / 2;
 	var centerY = absY + sizeY / 2
 	
-	
 	//determine over which canvas preview is located
-	
 	var canvasList = {};
 	
 	for (var canvas in editor.canvases) {
@@ -143,6 +139,8 @@ editor.updateRelativeCoords = function() {
 		c.startY = c.offset.top;
 		c.endX = c.startX + $(can).width();
 		c.endY = c.startY + $(can).height();
+		c.width = $(can).width();
+		c.height = $(can).height();
 		canvasList[canvas] = c;
 	}
 	
@@ -158,27 +156,31 @@ editor.updateRelativeCoords = function() {
 			break;
 		}
 	}
-	
 	//"canvas" variable now is "none", "front", "rear" or "sides"
-	
-	
-	//calculate preview offset from this canvas
-	
-	var absOffsetX = 0;
-	var absOffsetY = 0;
-	
-	if (canvas != "none") {
-		var can = canvasList[canvas];
-		absOffsetX = absX - can.startX;
-		absOffsetY = absY - can.startY;
+	if (canvas == "none") {
+		editor.state.canvas = "none";
+		return;
 	}
 	
+	//calculate preview offset from this canvas
+	var can = canvasList[canvas];
+	var absOffsetX = absX - can.startX;
+	var absOffsetY = absY - can.startY;
 	
 	//and make them relative
+	var relOffsetX = absOffsetX / canvasList[canvas].width;
+	var relOffsetY = absOffsetX / canvasList[canvas].height;
 	
+	//calculate relative size of preview
+	var relSizeX = sizeX / canvasList[canvas].width;
+	var relSizeY = sizeY / canvasList[canvas].height;
 	
-	
-	
+	editor.state.canvas = canvas;
+	editor.state.relativeX = relOffsetX;
+	editor.state.relativeY = relOffsetY;
+	editor.state.relativeSizeX = relSizeX;
+	editor.state.relativeSizeY = relSizeY;
+		
 }
 
 
@@ -195,17 +197,25 @@ editor.toolUsed = function() {
 	editor.state.sizeY = $("#preview").height();
 	editor.updateRelativeCoords();
 	
-	history.newEntry(
-						editor.state.currentTool,
-						editor.state.content,
-						editor.state.relativeX,
-						editor.state.relativeY,
-						editor.state.canvas,
-						editor.state.relativeSizeX,
-						editor.state.relativeSizeY,
-						editor.state.previewId
-					);
-					
+	if (editor.state.canvas == "none") {
+		
+		editor.state.noCanvasError = true;
+		editor.noCanvasError();
+		$("#preview").remove();
+			
+	} else {
+	
+		history.newEntry(
+			editor.state.currentTool,
+			editor.state.content,
+			editor.state.relativeX,
+			editor.state.relativeY,
+			editor.state.canvas,
+			editor.state.relativeSizeX,
+			editor.state.relativeSizeY,
+			editor.state.previewId
+		);	
+		
 	editor.state.changes++;
 	
 	$("#preview")
@@ -213,13 +223,18 @@ editor.toolUsed = function() {
 		.css("cursor", "auto")
 		.attr("id", editor.state.previewId);
 	
+	}
+	
 }
 
 
 editor.useTool = function(tool) {
 	
-	editor.state.currentTool = tool;
 	editor.toolUsed();
+	
+	if (editor.state.noCanvasError) return;
+	
+	editor.state.currentTool = tool;
 	editor.state.newPreviewId();
 	$("#modalOpener").click();
 	editor.tools[tool]();
@@ -235,6 +250,23 @@ editor.previewToShirt = function() {
 		.css("cursor", "move")
 		.draggable();
 	$("#modal").modal('hide');
+	
+}
+
+
+editor.noCanvasError = function() {
+	
+	$("#modalOpener").click();
+	$("#cancelbutton").remove();
+	$("#okbutton").text("OK").click(function() {
+		$("#modal").modal('hide');
+		editor.state.noCanvasError = false;
+	});
+	$("#modalTitle").text("Ошибка");
+	ReactDOM.render(
+		<NoCanvasErrorMessage />,
+		document.getElementById("modalBody")
+	);
 	
 }
 
@@ -264,6 +296,8 @@ editor.init = function() {
 The canvas element runs independent from the device or monitor's pixel ratio.
 On the iPad 3+, this ratio is 2. This essentially means that your 1000px width canvas would now need to fill 2000px to match it's stated width on the iPad display. Fortunately for us, this is done automatically by the browser. On the other hand, this is also the reason why you see less definition on images and canvas elements that were made to directly fit their visible area. Because your canvas only knows how to fill 1000px but is asked to draw to 2000px, the browser must now intelligently fill in the blanks between pixels to display the element at its proper size.
 */
+//MyNameIsKo
+//http://stackoverflow.com/questions/15661339/how-do-i-fix-blurry-text-in-my-html5-canvas
 
 
 var PIXEL_RATIO = (function () {
@@ -778,6 +812,18 @@ var ColorPicker = React.createClass ({
 });
 
 
+var NoCanvasErrorMessage = React.createClass ({
+
+	render: function() {
+    	return(
+    		<div className="container-fluid">
+    			Предыдущий элемент был помещен вне какого-либо макета и будет удален.
+    		</div>
+    	);
+    }
+    
+});
+
 
 
 
@@ -905,7 +951,7 @@ var Modal = React.createClass({
                   
                 </div>
                 <div className="modal-footer">
-                  <button type="button" className="btn btn-flat" data-dismiss="modal">Отмена</button>
+                  <button type="button" className="btn btn-flat" data-dismiss="modal" id="cancelbutton">Отмена</button>
                   <button type="button" className="btn btn-flat" id="okbutton">Готово</button>
                 </div>
               </div>
