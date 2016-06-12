@@ -216,13 +216,17 @@ editor.toolUsed = function() {
 			editor.state.previewId
 		);	
 		
-	editor.state.changes++;
-	
-	$("#preview")
-		.draggable("destroy")
-		.css("cursor", "auto")
-		.attr("id", editor.state.previewId);
-	
+		editor.state.changes++;
+		
+		if ($("#preview").is('.ui-resizable')) {
+			$("#preview").resizable('destroy');
+		} else {
+			$("#preview").draggable("destroy");
+		}
+		$("#preview")
+			.css("cursor", "auto")
+			.attr("id", editor.state.previewId);
+		
 	}
 	
 }
@@ -434,6 +438,9 @@ editor.tools = {
 		);
 		
 		
+		
+		
+		
 	},
 	
 	
@@ -453,16 +460,6 @@ editor.tools = {
 	
 	
 	clearall: function() {
-	
-	},
-	
-	
-	save: function() {
-	
-	},
-	
-	
-	load: function() {
 	
 	},
 	
@@ -628,25 +625,24 @@ var Addpicture = React.createClass({
 				canvas.height = img.height;
 				context.drawImage(img,0,0);
 				$(canvas)
-					.attr('id', 'preview')
 					.appendTo($("body"))
+					.attr('id', 'preview')
 					.center()
-					.css("cursor", "move")
-					.draggable()
 					.resizable({
-						aspectRatio: true
-					});
+						aspectRatio: true,
+						handles: "n, e, s, w, ne, se, sw, nw",
+					})
+					.closest('div').draggable({containment: "parent"});
+				$("#modal").modal('hide');
+				editor.state.content = {
+					image: img,
+					sizeX: img.width,
+					sizeY: img.height
+				};
 			}
 			img.src = event.target.result;
 		}
 		reader.readAsDataURL(e.target.files[0]); 
-		
-		editor.state.content = {
-			image: 0,
-			sizeX: 0,
-			sizeY: 0
-		};
-		
 	},
 
     render: function() {
@@ -660,6 +656,7 @@ var Addpicture = React.createClass({
 				<div className="container-fluid">
 					<input type="file" id="imageLoader" name="imageLoader"/>		
 				</div>
+				
 				
     		</div>
 		);
@@ -720,16 +717,6 @@ resources.tools = [
 		tooltip: "Очистить все",
 		id: "clearall",
 		glyphicon: "glyphicon glyphicon-trash"
-	},
-	{
-		tooltip: "Сохранить макет",
-		id: "save",
-		glyphicon: "glyphicon glyphicon-floppy-save"
-	},
-	{
-		tooltip: "Загрузить макет",
-		id: "load",
-		glyphicon: "glyphicon glyphicon-floppy-open"
 	},
 	{
 		tooltip: "Сохранить как картинку",
