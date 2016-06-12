@@ -373,28 +373,9 @@ var absoluteOffset = function(element) {
 
 //=============================== TOOLS ======================================
 
-editor.prepareModal = function() {
-
-	$("#modal").on('shown.bs.modal', function() {
-		var width = $("#previewDiv").width();
-		var height = $("#previewDiv").height();
-		var canvas = createHiDPICanvas(width, height);
-		canvas.id = "preview";
-		$(canvas).appendTo("#previewDiv");
-	});
-	
-	$("#okbutton").click(function() {
-		if ($("#text").val() != "") {
-			editor.previewToShirt();
-		} else {
-			$("#modal").modal('hide');
-		}
-	});
-	
-}
-		
 	
 editor.tools = {
+
 
 	addtext: function() {
 		
@@ -424,52 +405,73 @@ editor.tools = {
 			triggerOnchange($("#hexcolor")[0]);
 		});
 		
-		editor.prepareModal();
+		$("#modal").on('shown.bs.modal', function() {
+			var width = $("#previewDiv").width();
+			var height = $("#previewDiv").height();
+			var canvas = createHiDPICanvas(width, height);
+			canvas.id = "preview";
+			$(canvas).appendTo("#previewDiv");
+		});
+	
+		$("#okbutton").click(function() {
+			if ($("#text").val() != "") {
+				editor.previewToShirt();
+			} else {
+				$("#modal").modal('hide');
+			}
+		});
 		
 	},
 	
+	
 	addpicture: function() {
 		
-		$("#modalTitle").text("Добавить текст");
+		$("#modalTitle").text("Добавить картинку");
 		
 		ReactDOM.render(
-			<Addtext />,
+			<Addpicture />,
 			document.getElementById("modalBody")
 		);
 		
 		
-		
-		editor.prepareModal();
-		
 	},
+	
 	
 	color: function() {
 	
 	},
 	
+	
 	addfigure: function() {
 	
 	},
+	
 	
 	undo: function() {
 	
 	},
 	
+	
 	clearall: function() {
 	
 	},
+	
 	
 	save: function() {
 	
 	},
 	
+	
 	load: function() {
 	
 	},
 	
+	
 	render: function() {
 	
 	},
+	
+	
 }
 
 
@@ -550,6 +552,7 @@ var Addtext = React.createClass({
 			x: x,
 			y: y,
 		};
+		
 	},
 
     render: function() {
@@ -596,7 +599,6 @@ var Addtext = React.createClass({
 				<div className="container-fluid">
 					<div className="col-xs-12 col-sm-12 col-md-12 col-lg-10 preview" id="previewDiv">
 						
-						
 					</div>	
 				</div>
 				
@@ -606,6 +608,64 @@ var Addtext = React.createClass({
 	
 });
 
+
+
+var Addpicture = React.createClass({
+	
+	componentDidMount: function() {
+		var imageLoader = document.getElementById('imageLoader');
+		imageLoader.addEventListener('change', this.handleImage, false);
+	},
+	
+	handleImage: function(e) {
+		var canvas = document.createElement('canvas');
+		var context = canvas.getContext("2d");
+		var reader = new FileReader();
+		reader.onload = function(event){
+			var img = new Image();
+			img.onload = function(){
+				canvas.width = img.width;
+				canvas.height = img.height;
+				context.drawImage(img,0,0);
+				$(canvas)
+					.attr('id', 'preview')
+					.appendTo($("body"))
+					.center()
+					.css("cursor", "move")
+					.draggable()
+					.resizable({
+						aspectRatio: true
+					});
+			}
+			img.src = event.target.result;
+		}
+		reader.readAsDataURL(e.target.files[0]); 
+		
+		editor.state.content = {
+			image: 0,
+			sizeX: 0,
+			sizeY: 0
+		};
+		
+	},
+
+    render: function() {
+    	return(
+    		<div>
+    			
+    			<div className="container-fluid">
+					<h4>Загрузите изображение:</h4>
+				</div>
+				
+				<div className="container-fluid">
+					<input type="file" id="imageLoader" name="imageLoader"/>		
+				</div>
+				
+    		</div>
+		);
+	}
+	
+});
 
 
 
