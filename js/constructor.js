@@ -357,6 +357,19 @@ jQuery.fn.center = function() {
     
 }
 
+$.widget("ui.resizable", $.ui.resizable, {
+    resizeTo: function(newSize) {
+        var start = new $.Event("mousedown", { pageX: 0, pageY: 0 });
+        this._mouseStart(start);
+        this.axis = 'se';
+        var end = new $.Event("mouseup", {
+            pageX: newSize.width - this.originalSize.width,
+            pageY: newSize.height - this.originalSize.height
+        });
+        this._mouseDrag(end);
+        this._mouseStop(end);
+    }
+});
 
 var absoluteOffset = function(element) {
 
@@ -617,13 +630,17 @@ var Addpicture = React.createClass({
 	handleImage: function(e) {
 		var canvas = document.createElement('canvas');
 		var context = canvas.getContext("2d");
+		
 		var reader = new FileReader();
+		
 		reader.onload = function(event){
 			var img = new Image();
+			
 			img.onload = function(){
 				canvas.width = img.width;
 				canvas.height = img.height;
 				context.drawImage(img,0,0);
+				
 				$(canvas)
 					.appendTo($("body"))
 					.attr('id', 'preview')
@@ -633,12 +650,30 @@ var Addpicture = React.createClass({
 						handles: "n, e, s, w, ne, se, sw, nw",
 					})
 					.closest('div').draggable({containment: "parent"});
+				
+				//Resize image if it's too big and covers whole page
+				var w = window.innerWidth;
+				var h = window.innerHeight;
+				if ( (img.width > w-100) || (img.height > h-150) ) {
+					var ratio = img.width / img.height;
+					if (ratio > 1) {
+						var newWidth = w*0.7;
+						var newHeight = newWidth / ratio;
+					} else {
+						var newHeight = w*0.6;
+						var newWidth = newHeight / ratio;
+					}
+					$(canvas).resizable("resizeTo", { height: newHeight, width: newWidth });
+					$(canvas).closest('div').center();
+				}
+				
 				$("#modal").modal('hide');
 				editor.state.content = {
 					image: img,
 					sizeX: img.width,
 					sizeY: img.height
 				};
+				
 			}
 			img.src = event.target.result;
 		}
@@ -652,6 +687,8 @@ var Addpicture = React.createClass({
     			<div className="container-fluid">
 					<h4>Загрузите изображение:</h4>
 				</div>
+				
+				<EmptyContainer />
 				
 				<div className="container-fluid">
 					<input type="file" id="imageLoader" name="imageLoader"/>		
