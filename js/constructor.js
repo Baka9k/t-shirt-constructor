@@ -368,11 +368,32 @@ var absoluteOffset = function(element) {
         left: left
     };
     
-};
+}
 
 
 //=============================== TOOLS ======================================
 
+editor.prepareModal = function() {
+
+	$("#modal").on('shown.bs.modal', function() {
+		var width = $("#previewDiv").width();
+		var height = $("#previewDiv").height();
+		var canvas = createHiDPICanvas(width, height);
+		canvas.id = "preview";
+		$(canvas).appendTo("#previewDiv");
+	});
+	
+	$("#okbutton").click(function() {
+		if ($("#text").val() != "") {
+			editor.previewToShirt();
+		} else {
+			$("#modal").modal('hide');
+		}
+	});
+	
+}
+		
+	
 editor.tools = {
 
 	addtext: function() {
@@ -383,14 +404,6 @@ editor.tools = {
 			<Addtext />,
 			document.getElementById("modalBody")
 		);
-		
-		$("#modal").on('shown.bs.modal', function() {
-			var width = $("#previewDiv").width();
-			var height = $("#previewDiv").height();
-			var canvas = createHiDPICanvas(width, height);
-			canvas.id = "preview";
-			$(canvas).appendTo("#previewDiv");
-		});
 		
 		
 		$(".fontlist").each(function(index) {
@@ -411,21 +424,23 @@ editor.tools = {
 			triggerOnchange($("#hexcolor")[0]);
 		});
 		
-		$("#okbutton").click(function() {
-			if ($("#text").val() != "") {
-				editor.previewToShirt();
-			} else {
-				$("#modal").modal('hide');
-			}
-		});
-		
-		
-		
+		editor.prepareModal();
 		
 	},
 	
 	addpicture: function() {
-	
+		
+		$("#modalTitle").text("Добавить текст");
+		
+		ReactDOM.render(
+			<Addtext />,
+			document.getElementById("modalBody")
+		);
+		
+		
+		
+		editor.prepareModal();
+		
 	},
 	
 	color: function() {
