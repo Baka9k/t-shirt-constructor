@@ -10,6 +10,4 @@
 - Add text
 - Add image from file
 - Add figure
-- Export to JSON
-- Import from JSON
 - Render to png
