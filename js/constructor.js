@@ -17,6 +17,9 @@ editor.contexts = {};
 
 
 editor.state = {
+    
+    shirtColor: "#ff0000",
+    lastShirtColor: "ff0000",
 	currentTool: "",
 	content: {},
 	absoluteX: 0,
@@ -47,6 +50,7 @@ editor.state = {
 	newPreviewId: function() {
 		editor.state.previewId = Math.random().toString();
 	},
+    
 }
 
 	
@@ -186,60 +190,79 @@ editor.updateRelativeCoords = function() {
 
 editor.toolUsed = function() {
 
-	//When new tool is picked, disable .draggable for current preview canvas and save changes made by the previous tool to history
+	//When new tool is picked, disable .draggable and .resizable for current preview canvas and save changes made by the previous tool to history
+    
+    var toolsWithPreview = ["addtext", "addpicture", "addfigure"];
+    var toolsWithoutPreview = ["color"];
+    
+    if (toolsWithPreview.indexOf(editor.state.currentTool) != -1) {
+        
+        if (!$("#preview")[0]) return;
+        
+        var coords = absoluteOffset($("#preview")[0]);
+        editor.state.absoluteX = coords.left;
+        editor.state.absoluteY = coords.top;
+        editor.state.sizeX = $("#preview").width();
+        editor.state.sizeY = $("#preview").height();
+        editor.updateRelativeCoords();
+        
+        if (editor.state.canvas == "none") {
+            
+            editor.state.noCanvasError = true;
+            editor.noCanvasError();
+            $("#preview").remove();
+            
+        } else {
+        
+            history.newEntry(
+                true,
+                editor.state.currentTool,
+                editor.state.content,
+                editor.state.relativeX,
+                editor.state.relativeY,
+                editor.state.canvas,
+                editor.state.relativeSizeX,
+                editor.state.relativeSizeY,
+                editor.state.previewId
+            );
+            
+            editor.state.changes++;
+            
+            if ($("#preview").is('.ui-resizable')) {
+                $("#preview").resizable('destroy');
+            } else {
+                $("#preview").draggable("destroy");
+            }
+            $("#preview")
+                .css("cursor", "auto")
+                .attr("id", editor.state.previewId);
+            
+        }
 	
-	if (!$("#preview")[0]) return;
-		
-	var coords = absoluteOffset($("#preview")[0]);
-	editor.state.absoluteX = coords.left;
-	editor.state.absoluteY = coords.top;
-	editor.state.sizeX = $("#preview").width();
-	editor.state.sizeY = $("#preview").height();
-	editor.updateRelativeCoords();
-	
-	if (editor.state.canvas == "none") {
-		
-		editor.state.noCanvasError = true;
-		editor.noCanvasError();
-		$("#preview").remove();
-			
-	} else {
-	
-		history.newEntry(
-			editor.state.currentTool,
-			editor.state.content,
-			editor.state.relativeX,
-			editor.state.relativeY,
-			editor.state.canvas,
-			editor.state.relativeSizeX,
-			editor.state.relativeSizeY,
-			editor.state.previewId
-		);	
-		
-		editor.state.changes++;
-		
-		if ($("#preview").is('.ui-resizable')) {
-			$("#preview").resizable('destroy');
-		} else {
-			$("#preview").draggable("destroy");
-		}
-		$("#preview")
-			.css("cursor", "auto")
-			.attr("id", editor.state.previewId);
-		
-	}
-	
+    }
+
+    if (toolsWithoutPreview.indexOf(editor.state.currentTool) != -1) {
+       
+       history.newEntry(
+            false,
+            editor.state.currentTool
+        );
+        
+        editor.state.changes++;
+         
+    }
+    
 }
 
 
 editor.useTool = function(tool) {
 	
+    editor.state.newPreviewId();
 	editor.toolUsed();
 	
 	if (editor.state.noCanvasError) return;
 	
 	editor.state.currentTool = tool;
-	editor.state.newPreviewId();
 	$("#modalOpener").click();
 	editor.tools[tool]();
 	
@@ -286,7 +309,7 @@ editor.init = function() {
 	for (var canvas in editor.canvases) {
 		editor.contexts[canvas] = editor.canvases[canvas].getContext("2d");
 	}
-	editor.drawFill("#FF0000");
+	editor.drawFill(editor.state.shirtColor);
 	editor.drawMasks();
 	editor.activateTools();
 	
@@ -399,44 +422,9 @@ editor.tools = {
 		$("#modalTitle").text("Добавить текст");
 		
 		ReactDOM.render(
-			<Addtext />,
+			<AddText />,
 			document.getElementById("modalBody")
 		);
-		
-		
-		$(".fontlist").each(function(index) {
-			$(this).css("font-family", $(this).text()); 
-		});
-		
-		$("#colorpicker").spectrum({
-    		color: "#000000",
-    		cancelText: "Отмена",
-        	chooseText: "Выбрать",
-			change: function(color){
-				$("#hexcolor").val(color.toHexString().substr(1,6));
-				triggerOnchange($("#hexcolor")[0]);
-			},
-		});
-		$("#hexcolor").change(function() {
-			$("#colorpicker").spectrum("set", $("#hexcolor").val());
-			triggerOnchange($("#hexcolor")[0]);
-		});
-		
-		$("#modal").on('shown.bs.modal', function() {
-			var width = $("#previewDiv").width();
-			var height = $("#previewDiv").height();
-			var canvas = createHiDPICanvas(width, height);
-			canvas.id = "preview";
-			$(canvas).appendTo("#previewDiv");
-		});
-	
-		$("#okbutton").click(function() {
-			if ($("#text").val() != "") {
-				editor.previewToShirt();
-			} else {
-				$("#modal").modal('hide');
-			}
-		});
 		
 	},
 	
@@ -446,24 +434,36 @@ editor.tools = {
 		$("#modalTitle").text("Добавить картинку");
 		
 		ReactDOM.render(
-			<Addpicture />,
+			<AddPicture />,
 			document.getElementById("modalBody")
 		);
-		
-		
-		
-		
 		
 	},
 	
 	
 	color: function() {
-	
+        
+        editor.state.lastShirtColor = editor.state.shirtColor;
+        
+        $("#modalTitle").text("Изменить цвет футболки");
+		
+		ReactDOM.render(
+			<ChangeColor />,
+			document.getElementById("modalBody")
+		);
+        
 	},
 	
 	
 	addfigure: function() {
-	
+        
+        $("#modalTitle").text("Добавить фигуру");
+		
+		ReactDOM.render(
+			<AddFigure />,
+			document.getElementById("modalBody")
+		);
+        
 	},
 	
 	
@@ -496,16 +496,34 @@ var history = {};
 history.changes = [];
 
 
-var Change = function (tool, content, x, y, canvas, sizeX, sizeY, previewId) {
-
-	this.tool = tool;
-	this.content = content;
-	this.x = x;
-	this.y = y;
-	this.sizeX = sizeX;
-	this.sizeY = sizeY;
-	this.previewId = previewId;
-	return this;
+var Change = function (withPreview, tool, content, x, y, canvas, sizeX, sizeY, previewId) {
+    
+    if (withPreview) {
+        
+        this.tool = tool;
+        this.content = content;
+        this.x = x;
+        this.y = y;
+        this.sizeX = sizeX;
+        this.sizeY = sizeY;
+        this.canvas = canvas;
+        this.previewId = previewId;
+        
+        this.comment = "Added element on canvas '" + this.canvas + "'";
+        
+        return this;
+        
+    } else if (!withPreview) {
+     
+        this.tool = tool;
+        
+        if (this.tool == "color") {
+            this.oldColor = editor.state.lastShirtColor;
+            this.newColor = editor.state.shirtColor;
+            this.comment = "T-shirt color changed from " + this.oldColor + "to " + this.newColor;
+        }
+        
+    }
 	
 }
 
@@ -514,7 +532,9 @@ history.newEntry = function(tool, content, x, y, canvas, sizeX, sizeY, previewId
 
 	var entry = new Change (tool, content, x, y, canvas, sizeX, sizeY, previewId);
 	history.changes.push(entry);
-	
+    
+	console.log(entry.comment);
+    
 }
 
 
@@ -527,8 +547,44 @@ history.newEntry = function(tool, content, x, y, canvas, sizeX, sizeY, previewId
 
 //----------------- tool dialogs --------------------
 
-var Addtext = React.createClass({
+var AddText = React.createClass({
 	
+    componentDidMount: function() {
+        $(".fontlist").each(function(index) {
+			$(this).css("font-family", $(this).text()); 
+		});
+		
+		$("#colorpicker").spectrum({
+    		color: "#000000",
+    		cancelText: "Отмена",
+        	chooseText: "Выбрать",
+			change: function(color){
+				$("#hexcolor").val(color.toHexString().substr(1,6));
+				triggerOnchange($("#hexcolor")[0]);
+			},
+		});
+		$("#hexcolor").change(function() {
+			$("#colorpicker").spectrum("set", $("#hexcolor").val());
+			triggerOnchange($("#hexcolor")[0]);
+		});
+		
+		$("#modal").on('shown.bs.modal', function() {
+			var width = $("#previewDiv").width();
+			var height = $("#previewDiv").height();
+			var canvas = createHiDPICanvas(width, height);
+			canvas.id = "preview";
+			$(canvas).appendTo("#previewDiv");
+		});
+	
+		$("#okbutton").click(function() {
+			if ($("#text").val() != "") {
+				editor.previewToShirt();
+			} else {
+				$("#modal").modal('hide');
+			}
+		});
+    },
+    
 	handleChange: function() {
 		this.updatePreview();
 	},
@@ -620,7 +676,7 @@ var Addtext = React.createClass({
 
 
 
-var Addpicture = React.createClass({
+var AddPicture = React.createClass({
 	
 	componentDidMount: function() {
 		var imageLoader = document.getElementById('imageLoader');
@@ -649,6 +705,7 @@ var Addpicture = React.createClass({
 						aspectRatio: true,
 						handles: "n, e, s, w, ne, se, sw, nw",
 					})
+                    .css("cursor", "move")
 					.closest('div').draggable({containment: "parent"});
 				
 				//Resize image if it's too big and covers whole page
@@ -703,6 +760,203 @@ var Addpicture = React.createClass({
 
 
 
+var ChangeColor = React.createClass({
+	
+    componentDidMount: function() {
+        
+        this.colorBeforeChanges = editor.state.shirtColor;
+        
+		$("#colorpicker").spectrum({
+    		color: editor.state.shirtColor,
+    		cancelText: "Отмена",
+        	chooseText: "Выбрать",
+			change: function(color){
+				$("#hexcolor").val(color.toHexString().substr(1,6));
+				triggerOnchange($("#hexcolor")[0]);
+			},
+		});
+		$("#hexcolor").change(function() {
+			$("#colorpicker").spectrum("set", $("#hexcolor").val());
+			triggerOnchange($("#hexcolor")[0]);
+		});
+	
+		$("#okbutton").click(function() {
+			$("#modal").modal('hide');
+		});
+        
+        var updateShirtColor = this.updateShirtColor;
+        var colorBeforeChanges = this.colorBeforeChanges;
+        $("#cancelbutton").click(function() {
+            editor.state.shirtColor = colorBeforeChanges;
+            updateShirtColor();
+			$("#modal").modal('hide');
+		});
+        
+	},
+    
+	handleChange: function() {
+        var color = $("#colorpicker").spectrum('get');
+        var hexColor = color.toHexString();
+        editor.state.shirtColor = hexColor;
+		this.updateShirtColor();
+	},
+	
+	updateShirtColor: function() {
+		editor.drawFill(editor.state.shirtColor);
+        editor.drawMasks();
+	},
+
+    render: function() {
+    	return(
+    		<div onChange={this.handleChange}>
+    			
+				<div className="container-fluid">
+					<div className="colorpicker-label">
+						Выберите цвет футболки
+					</div>
+					<div className="colorpicker">
+					
+						<ColorPicker />
+					
+					</div>
+					<div>
+						<div className="input-group hexcolor">
+							<span className="input-group-addon">#</span>
+							<input type = "text" className = "form-control" id="hexcolor" maxLength="6" />
+						</div>
+					</div>
+				</div>
+				
+    		</div>
+		);
+	}
+	
+});
+
+
+
+var AddFigure = React.createClass({
+	
+    componentDidMount: function() {
+        
+		$("#colorpicker").spectrum({
+    		color: "#000000",
+    		cancelText: "Отмена",
+        	chooseText: "Выбрать",
+			change: function(color){
+				$("#hexcolor").val(color.toHexString().substr(1,6));
+				triggerOnchange($("#hexcolor")[0]);
+			},
+		});
+		$("#hexcolor").change(function() {
+			$("#colorpicker").spectrum("set", $("#hexcolor").val());
+			triggerOnchange($("#hexcolor")[0]);
+		});
+		
+		$("#modal").on('shown.bs.modal', function() {
+			var width = $("#previewDiv").width();
+			var height = $("#previewDiv").height();
+			var canvas = createHiDPICanvas(width, height);
+			canvas.id = "preview";
+			$(canvas).appendTo("#previewDiv");
+		});
+	
+		$("#okbutton").click(function() {
+            editor.previewToShirt();
+		});
+        
+    },
+    
+	handleChange: function() {
+		this.updatePreview();
+	},
+	
+	updatePreview: function() {
+        
+        /*
+		var canvas = document.getElementById("preview");
+		var context = canvas.getContext("2d");
+		var size = $("#sizepicker").val();
+		var color = $("#colorpicker").spectrum('get');
+		
+		var textWidth = context.measureText(text).width;
+		var textHeight = size;
+        
+		var x = canvas.width / 2 - textWidth / 2;
+		var y = canvas.height / 2 + textHeight / 2;
+		
+		context.clearRect(0, 0, canvas.width, canvas.height);
+		
+		if (color.toHexString) var hexColor = color.toHexString();
+		context.fillStyle = 0 || hexColor;
+		context.fillText(text, x, y);
+		
+		editor.state.content = {
+			text: text,
+			font: font,
+			size: size,
+			color: hexColor,
+			x: x,
+			y: y,
+		};
+        */
+		
+	},
+
+    render: function() {
+    	return(
+    		<div onChange={this.handleChange} id="addtext">
+    			
+    			<div className="container-fluid">
+					
+					<TextArea updatePreview={this.updatePreview} />
+					
+				</div>
+				
+				<div className="container-fluid">
+					<div className="col-xs-6 col-sm-6 col-md-6 col-lg-4 smallinput">
+						
+						<FontSizePicker />
+						
+					</div>
+				
+					<div className="col-xs-6 col-sm-6 col-md-6 col-lg-8 smallinput">
+
+						  <FontList fonts={resources.fonts} />
+							
+					</div>			
+				</div>
+				
+				<div className="container-fluid">
+					<div className="colorpicker-label">
+						Выберите цвет текста
+					</div>
+					<div className="colorpicker">
+					
+						<ColorPicker />
+					
+					</div>
+					<div>
+						<div className="input-group hexcolor">
+							<span className="input-group-addon">#</span>
+							<input type = "text" className = "form-control" id="hexcolor" maxLength="6" />
+						</div>
+					</div>
+				</div>
+				
+				<div className="container-fluid">
+					<div className="col-xs-12 col-sm-12 col-md-12 col-lg-10 preview" id="previewDiv">
+						
+					</div>	
+				</div>
+				
+    		</div>
+		);
+	}
+	
+});
+
+
 
 //------------------ resources --------------------
 
@@ -736,7 +990,7 @@ resources.tools = [
 		glyphicon: "glyphicon glyphicon-picture"
 	},
 	{
-		tooltip: "Цвет фона",
+		tooltip: "Цвет футболки",
 		id: "color",
 		glyphicon: "glyphicon glyphicon-tint"
 	},
@@ -751,7 +1005,7 @@ resources.tools = [
 		glyphicon: "glyphicon glyphicon-backward"
 	},
 	{
-		tooltip: "Очистить все",
+		tooltip: "Очистить всё",
 		id: "clearall",
 		glyphicon: "glyphicon glyphicon-trash"
 	},
