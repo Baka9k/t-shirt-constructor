@@ -887,33 +887,34 @@ var AddFigure = React.createClass({
 	
 	updatePreview: function() {
         
-        /*
 		var canvas = document.getElementById("preview");
 		var context = canvas.getContext("2d");
-		var size = $("#sizepicker").val();
-		var color = $("#colorpicker").spectrum('get');
 		
-		var textWidth = context.measureText(text).width;
-		var textHeight = size;
-        
-		var x = canvas.width / 2 - textWidth / 2;
-		var y = canvas.height / 2 + textHeight / 2;
+		var figure = $("#figurepicker").val();
+		var width = $("#xsizepicker").val();
+		var height = $("#ysizepicker").val();
+		var strokeColor = $("#colorpicker").spectrum('get');
+		var fillColor = $("#colorpicker2").spectrum('get');
+		
+		//TODO: fix measures on HiDPI devices
+		var x = canvas.width / 2 - width / 2;
+		var y = canvas.height / 2 + height / 2;
 		
 		context.clearRect(0, 0, canvas.width, canvas.height);
 		
 		if (color.toHexString) var hexColor = color.toHexString();
 		context.fillStyle = 0 || hexColor;
-		context.fillText(text, x, y);
+		
+		//draw figure
 		
 		editor.state.content = {
-			text: text,
-			font: font,
-			size: size,
+			figure: figure,
+			width: width,
+			height: height,
 			color: hexColor,
 			x: x,
 			y: y,
 		};
-        */
 		
 	},
 
@@ -946,7 +947,7 @@ var AddFigure = React.createClass({
 					</div>
 					<div className="col-xs-6 col-sm-6 col-md-4 col-lg-3 smallinput">
 						<div className="checkbox right">
-							<label><input type="checkbox" value="" />Без обводки</label>
+							<label><input type="checkbox" value="" id="nostroke" />Без обводки</label>
 						</div>
 					</div>
 				</div>
@@ -968,7 +969,7 @@ var AddFigure = React.createClass({
 					</div>
 					<div className="col-xs-6 col-sm-6 col-md-4 col-lg-3 smallinput">
 						<div className="checkbox right">
-							<label><input type="checkbox" value="" />Без заливки</label>
+							<label><input type="checkbox" value="" id="nofill" />Без заливки</label>
 						</div>
 					</div>	
 				</div>
