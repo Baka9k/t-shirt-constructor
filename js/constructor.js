@@ -871,7 +871,7 @@ var AddFigure = React.createClass({
 			min: 2,
 			max: 300,
 			animate: "fast",
-			value: 20,
+			value: 50,
 			change: function(){
 				triggerOnchange($("#hexcolor")[0]);
 			},
@@ -880,19 +880,21 @@ var AddFigure = React.createClass({
 			min: 2,
 			max: 300,
 			animate: "fast",
-			value: 20,
+			value: 50,
 			change: function(){
 				triggerOnchange($("#hexcolor")[0]);
 			},
 		});
 		$("#linewidth").val("1");
 		
+		var updatePreview = this.updatePreview;
 		$("#modal").on('shown.bs.modal', function() {
 			var width = $("#previewDiv").width();
 			var height = $("#previewDiv").height();
 			var canvas = createHiDPICanvas(width, height);
 			canvas.id = "preview";
 			$(canvas).appendTo("#previewDiv");
+			updatePreview();
 		});
 	
 		$("#okbutton").click(function() {
@@ -927,9 +929,8 @@ var AddFigure = React.createClass({
 		if ($("#nostroke").is(":checked")) hexStrokeColor = "rgba(0,0,0,0)";
 		if ($("#nofill").is(":checked")) hexFillColor = "rgba(0,0,0,0)";
 		
-		context.strokeStyle = strokeColor;
-		context.fillStyle = fillColor;
-		console.log(figure, lineWidth, width, hexStrokeColor, hexFillColor, height);
+		context.strokeStyle = hexStrokeColor;
+		context.fillStyle = hexFillColor;
 		
 		context.clearRect(0, 0, canvas.width, canvas.height);
 		
