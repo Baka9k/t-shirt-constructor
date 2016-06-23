@@ -923,7 +923,9 @@ var AddFigure = React.createClass({
 		context.fillStyle = fillColor;
 		
 		context.clearRect(0, 0, canvas.width, canvas.height);
+		
 		//draw figure
+		if (figure == "rectangle")
 		
 		editor.state.content = {
 			figure: figure,
@@ -1122,7 +1124,7 @@ var SelectItemWrapper = React.createClass ({
 	render: function() {
 		return (
 			<option className={this.props.classname} value={this.props.item}>
-				{this.props.item}
+				{this.props.name}
 			</option>);
 	}
 	
@@ -1192,6 +1194,7 @@ var FontList = React.createClass({
 							key = {font}
 							classname = "fontlist"
 							item = {font}
+							name = {font}
 						/>
 					);
 				})}
@@ -1207,9 +1210,9 @@ var FigureList = React.createClass({
 	
 	figures: function() {
 		return [
-			"rectangle",
-			"triangle",
-			"ellipse"
+			{type: "rectangle", name: "Прямоугольник"},
+			{type: "triangle", name: "Треугольник"},
+			{type: "ellipse", name: "Эллипс"}
 		];
 	},
 	
@@ -1231,9 +1234,10 @@ var FigureList = React.createClass({
 					return (
 						<
 							SelectItemWrapper
-							key = {figure}
+							key = {figure.type}
 							classname = "figurelist"
-							item = {figure}
+							item = {figure.type}
+							name = {figure.name}
 						/>
 					);
 				})}
