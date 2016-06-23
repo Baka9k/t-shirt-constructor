@@ -904,8 +904,9 @@ var AddFigure = React.createClass({
 		var context = canvas.getContext("2d");
 		
 		var figure = $("#figurepicker").val();
-		var width = $("#xsizepicker").val();
-		var height = $("#ysizepicker").val();
+		var lineWidth = $("#linewidth").val();
+		var width = $("#xsizepicker").slider("value");
+		var height = $("#ysizepicker").slider("value");
 		var strokeColor = $("#colorpicker").spectrum('get');
 		var fillColor = $("#colorpicker2").spectrum('get');
 		
@@ -916,8 +917,8 @@ var AddFigure = React.createClass({
 		if (strokeColor.toHexString) var hexStrokeColor = strokeColor.toHexString();
 		if (fillColor.toHexString) var hexFillColor = fillColor.toHexString();
 		
-		if ($("#nostroke")[0].checked()) hexStrokeColor = "rgba(0,0,0,0)";
-		if ($("#nofill")[0].checked()) hexFillColor = "rgba(0,0,0,0)";
+		if ($("#nostroke").is(":checked")) hexStrokeColor = "rgba(0,0,0,0)";
+		if ($("#nofill").is(":checked")) hexFillColor = "rgba(0,0,0,0)";
 		
 		context.strokeStyle = strokeColor;
 		context.fillStyle = fillColor;
@@ -925,7 +926,13 @@ var AddFigure = React.createClass({
 		context.clearRect(0, 0, canvas.width, canvas.height);
 		
 		//draw figure
-		if (figure == "rectangle")
+		if (figure == "rectangle") {
+			context.beginPath();
+			context.rect(188, 50, 200, 100);
+			context.fill();
+			context.lineWidth = lineWidth;
+			context.stroke();
+		}
 		
 		editor.state.content = {
 			figure: figure,
@@ -948,7 +955,7 @@ var AddFigure = React.createClass({
 
 						  <FigureList />
 							
-					</div>		
+					</div>
 				</div>
 				
 				<div className="container-fluid">
@@ -994,6 +1001,16 @@ var AddFigure = React.createClass({
 						</div>
 					</div>	
 				</div>
+				
+				<div className="container-fluid">
+					<div className="colorpicker-label">
+						Толщина обводки:
+					</div>
+					<div className="input-group linewidth">
+						<input type = "number" className = "form-control" id="linewidth" maxLength="1" min="1" max="7" value="1" />
+						<span className="input-group-addon">px</span>
+					</div>
+				</div>	
 				
 				<div className="container-fluid">
 					<div className="table table-condensed table-bordered table-responsive">
