@@ -911,6 +911,8 @@ var AddFigure = React.createClass({
         
 		var canvas = document.getElementById("preview");
 		var context = canvas.getContext("2d");
+		var canvasWidth = $("#previewDiv").width();
+		var canvasHeight = $("#previewDiv").height();
 		
 		var figure = $("#figurepicker").val();
 		var lineWidth = $("#linewidth").val();
@@ -931,17 +933,53 @@ var AddFigure = React.createClass({
 		
 		context.strokeStyle = hexStrokeColor;
 		context.fillStyle = hexFillColor;
+		context.lineWidth = lineWidth;
 		
 		context.clearRect(0, 0, canvas.width, canvas.height);
 		
+		
 		//draw figure
+		
 		if (figure == "rectangle") {
+			
 			context.beginPath();
 			context.rect(x, y, width, height);
+			context.closePath();		
 			context.fill();
-			context.lineWidth = lineWidth;
 			context.stroke();
+			
+		} else if (figure == "triangle") {
+			
+			context.beginPath();
+			context.moveTo(x, y + height);
+			context.lineTo(x + width, y + height);
+			context.lineTo(canvasWidth / 2, y);
+			context.closePath();
+			context.fill();
+			context.stroke();
+			
+		} else if (figure == "ellipse") {
+			
+			context.save();
+			context.beginPath();
+			if (width > 280) {
+				var safeWidth = 280;
+			} else {
+				var safeWidth = width;
+			}
+			if (height > 150) {
+				var safeHeight = 170;
+			} else {
+				var safeHeight = height;
+			}
+			context.ellipse(x + (width/2), y + (height/2), safeWidth, safeHeight, 0, 0, Math.PI*2);
+			context.closePath();
+			context.fill();
+			context.stroke();
+			context.restore();
+			
 		}
+		
 		
 		editor.state.content = {
 			figure: figure,
