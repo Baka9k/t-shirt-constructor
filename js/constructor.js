@@ -900,18 +900,24 @@ var AddFigure = React.createClass({
 		var x = canvas.width / 2 - width / 2;
 		var y = canvas.height / 2 + height / 2;
 		
+		if (strokeColor.toHexString) var hexStrokeColor = strokeColor.toHexString();
+		if (fillColor.toHexString) var hexFillColor = fillColor.toHexString();
+		
+		if ($("#nostroke").checked()) hexStrokeColor = "rgba(0,0,0,0)";
+		if ($("#nofill").checked()) hexFillColor = "rgba(0,0,0,0)";
+		
+		context.strokeStyle = strokeColor;
+		context.fillStyle = fillColor;
+		
 		context.clearRect(0, 0, canvas.width, canvas.height);
-		
-		if (color.toHexString) var hexColor = color.toHexString();
-		context.fillStyle = 0 || hexColor;
-		
 		//draw figure
 		
 		editor.state.content = {
 			figure: figure,
 			width: width,
 			height: height,
-			color: hexColor,
+			strokeColor: hexStrokeColor,
+			fillColor: hexFillColor,
 			x: x,
 			y: y,
 		};
