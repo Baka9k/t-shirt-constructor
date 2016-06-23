@@ -872,13 +872,20 @@ var AddFigure = React.createClass({
 			max: 300,
 			animate: "fast",
 			value: 20,
+			change: function(){
+				triggerOnchange($("#hexcolor")[0]);
+			},
 		});
 		$('#ysizepicker').slider({
 			min: 2,
 			max: 300,
 			animate: "fast",
 			value: 20,
+			change: function(){
+				triggerOnchange($("#hexcolor")[0]);
+			},
 		});
+		$("#linewidth").val("1");
 		
 		$("#modal").on('shown.bs.modal', function() {
 			var width = $("#previewDiv").width();
@@ -912,7 +919,7 @@ var AddFigure = React.createClass({
 		
 		//TODO: fix measures on HiDPI devices
 		var x = canvas.width / 2 - width / 2;
-		var y = canvas.height / 2 + height / 2;
+		var y = canvas.height / 2 - height / 2;
 		
 		if (strokeColor.toHexString) var hexStrokeColor = strokeColor.toHexString();
 		if (fillColor.toHexString) var hexFillColor = fillColor.toHexString();
@@ -922,13 +929,14 @@ var AddFigure = React.createClass({
 		
 		context.strokeStyle = strokeColor;
 		context.fillStyle = fillColor;
+		console.log(figure, lineWidth, width, hexStrokeColor, hexFillColor, height);
 		
 		context.clearRect(0, 0, canvas.width, canvas.height);
 		
 		//draw figure
 		if (figure == "rectangle") {
 			context.beginPath();
-			context.rect(188, 50, 200, 100);
+			context.rect(x, y, width, height);
 			context.fill();
 			context.lineWidth = lineWidth;
 			context.stroke();
@@ -948,7 +956,7 @@ var AddFigure = React.createClass({
 
     render: function() {
     	return(
-    		<div onChange={this.handleChange}>
+    		<div onChange={this.handleChange} id="addfigurediv">
     			
 				<div className="container-fluid">
 					<div className="col-xs-6 col-sm-6 col-md-6 col-lg-8 smallinput">
@@ -1007,7 +1015,7 @@ var AddFigure = React.createClass({
 						Толщина обводки:
 					</div>
 					<div className="input-group linewidth">
-						<input type = "number" className = "form-control" id="linewidth" maxLength="1" min="1" max="7" value="1" />
+						<input type = "number" className = "form-control" id="linewidth" maxLength="1" min="1" max="7" />
 						<span className="input-group-addon">px</span>
 					</div>
 				</div>	
