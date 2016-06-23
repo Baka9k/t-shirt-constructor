@@ -905,31 +905,19 @@ var AddFigure = React.createClass({
 
     render: function() {
     	return(
-    		<div onChange={this.handleChange} id="addtext">
+    		<div onChange={this.handleChange}>
     			
-    			<div className="container-fluid">
-					
-					<TextArea updatePreview={this.updatePreview} />
-					
-				</div>
-				
 				<div className="container-fluid">
-					<div className="col-xs-6 col-sm-6 col-md-6 col-lg-4 smallinput">
-						
-						<FontSizePicker />
-						
-					</div>
-				
 					<div className="col-xs-6 col-sm-6 col-md-6 col-lg-8 smallinput">
 
-						  <FontList fonts={resources.fonts} />
+						  <FigureList />
 							
 					</div>			
 				</div>
 				
 				<div className="container-fluid">
 					<div className="colorpicker-label">
-						Выберите цвет текста
+						Выберите цвет обводки:
 					</div>
 					<div className="colorpicker">
 					
@@ -1111,6 +1099,48 @@ var FontList = React.createClass({
 							key = {font}
 							classname = "fontlist"
 							item = {font}
+						/>
+					);
+				})}
+				
+			</select>
+		);
+	}
+	
+});
+
+
+var FigureList = React.createClass({
+	
+	figures: function() {
+		return [
+			"rectangle",
+			"triangle",
+			"ellipse"
+		];
+	},
+	
+	getInitialState: function() {
+		return {value: "rectangle"};
+	},
+	
+	handleChange: function(event) {
+		this.setState({value: event.target.value});
+	},
+	
+    render: function() {
+    	var currentFigure = this.state.value;
+    	var figures = this.figures();
+    	return(
+    		<select value={currentFigure} onChange={this.handleChange} className="form-control select" id="figurepicker">
+    			
+				{figures.map(function(figure) {
+					return (
+						<
+							SelectItemWrapper
+							key = {figure}
+							classname = "figurelist"
+							item = {figure}
 						/>
 					);
 				})}
