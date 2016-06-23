@@ -868,14 +868,16 @@ var AddFigure = React.createClass({
 		});
 		
 		$('#xsizepicker').slider({
-			formatter: function(value) {
-				return '' + value;
-			}
+			min: 2,
+			max: 300,
+			animate: "fast",
+			value: 20,
 		});
 		$('#ysizepicker').slider({
-			formatter: function(value) {
-				return '' + value;
-			}
+			min: 2,
+			max: 300,
+			animate: "fast",
+			value: 20,
 		});
 		
 		$("#modal").on('shown.bs.modal', function() {
@@ -889,7 +891,6 @@ var AddFigure = React.createClass({
 		$("#okbutton").click(function() {
             editor.previewToShirt();
 		});
-        
 
     },
     
@@ -993,16 +994,39 @@ var AddFigure = React.createClass({
 				</div>
 				
 				<div className="container-fluid">
-					<div className="col-xs-6 col-sm-6 col-md-4 col-lg-3 smallinput">
-						//
+					<div className="table table-condensed table-bordered table-responsive">
+						<table className="table">
+							<tbody>
+								<tr>
+									<td>
+										Ширина
+									</td>
+									<td>
+										Высота
+									</td>
+								</tr>
+								<tr>
+									<td>
+										<div className="slider">
+											<div id="xsizepicker"></div>
+										</div>
+									</td>
+									<td>
+										<div className="slider">
+											<div id="ysizepicker"></div>
+										</div>
+									</td>
+								</tr>
+							</tbody>
+						</table>
 					</div>
-					<div className="col-xs-6 col-sm-6 col-md-4 col-lg-3 smallinput">
-						//
-					</div>
+					
+					
+					
 				</div>
 				
 				<div className="container-fluid">
-					<div className="col-xs-12 col-sm-12 col-md-12 col-lg-10 preview" id="previewDiv">
+					<div className="col-xs-12 col-sm-12 col-md-12 col-lg-10 preview-big" id="previewDiv">
 						
 					</div>	
 				</div>
