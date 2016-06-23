@@ -203,6 +203,12 @@ select {
 	float: left;
 }
 
+.checkbox {
+	padding: 6px;
+	border: solid 1px #cccccc;
+	border-radius: 4px;
+}
+
 
 
 

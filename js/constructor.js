@@ -651,7 +651,7 @@ var AddText = React.createClass({
 					</div>
 					<div className="colorpicker">
 					
-						<ColorPicker />
+						<ColorPicker id="colorpicker" />
 					
 					</div>
 					<div>
@@ -816,7 +816,7 @@ var ChangeColor = React.createClass({
 					</div>
 					<div className="colorpicker">
 					
-						<ColorPicker />
+						<ColorPicker id="colorpicker" />
 					
 					</div>
 					<div>
@@ -851,6 +851,20 @@ var AddFigure = React.createClass({
 		$("#hexcolor").change(function() {
 			$("#colorpicker").spectrum("set", $("#hexcolor").val());
 			triggerOnchange($("#hexcolor")[0]);
+		});
+		
+		$("#colorpicker2").spectrum({
+    		color: "#eeeeee",
+    		cancelText: "Отмена",
+        	chooseText: "Выбрать",
+			change: function(color){
+				$("#hexcolor2").val(color.toHexString().substr(1,6));
+				triggerOnchange($("#hexcolor2")[0]);
+			},
+		});
+		$("#hexcolor2").change(function() {
+			$("#colorpicker2").spectrum("set", $("#hexcolor2").val());
+			triggerOnchange($("#hexcolor2")[0]);
 		});
 		
 		$("#modal").on('shown.bs.modal', function() {
@@ -912,7 +926,7 @@ var AddFigure = React.createClass({
 
 						  <FigureList />
 							
-					</div>			
+					</div>		
 				</div>
 				
 				<div className="container-fluid">
@@ -921,7 +935,7 @@ var AddFigure = React.createClass({
 					</div>
 					<div className="colorpicker">
 					
-						<ColorPicker />
+						<ColorPicker id="colorpicker" />
 					
 					</div>
 					<div>
@@ -930,6 +944,33 @@ var AddFigure = React.createClass({
 							<input type = "text" className = "form-control" id="hexcolor" maxLength="6" />
 						</div>
 					</div>
+					<div className="col-xs-6 col-sm-6 col-md-4 col-lg-3 smallinput">
+						<div className="checkbox right">
+							<label><input type="checkbox" value="" />Без обводки</label>
+						</div>
+					</div>
+				</div>
+				
+				<div className="container-fluid">
+					<div className="colorpicker-label">
+						Выберите цвет заливки:
+					</div>
+					<div className="colorpicker">
+					
+						<ColorPicker id="colorpicker2" />
+					
+					</div>
+					<div>
+						<div className="input-group hexcolor">
+							<span className="input-group-addon">#</span>
+							<input type = "text" className = "form-control" id="hexcolor2" maxLength="6" />
+						</div>
+					</div>
+					<div className="col-xs-6 col-sm-6 col-md-4 col-lg-3 smallinput">
+						<div className="checkbox right">
+							<label><input type="checkbox" value="" />Без заливки</label>
+						</div>
+					</div>	
 				</div>
 				
 				<div className="container-fluid">
@@ -1188,7 +1229,7 @@ var ColorPicker = React.createClass ({
 
 	render: function() {
     	return(
-    		<input type='text' id="colorpicker" />
+    		<input type='text' id={this.props.id} />
     	);
     }
     
