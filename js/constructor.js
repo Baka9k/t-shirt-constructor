@@ -867,6 +867,17 @@ var AddFigure = React.createClass({
 			triggerOnchange($("#hexcolor2")[0]);
 		});
 		
+		$('#xsizepicker').slider({
+			formatter: function(value) {
+				return '' + value;
+			}
+		});
+		$('#ysizepicker').slider({
+			formatter: function(value) {
+				return '' + value;
+			}
+		});
+		
 		$("#modal").on('shown.bs.modal', function() {
 			var width = $("#previewDiv").width();
 			var height = $("#previewDiv").height();
@@ -879,6 +890,7 @@ var AddFigure = React.createClass({
             editor.previewToShirt();
 		});
         
+
     },
     
 	handleChange: function() {
@@ -903,8 +915,8 @@ var AddFigure = React.createClass({
 		if (strokeColor.toHexString) var hexStrokeColor = strokeColor.toHexString();
 		if (fillColor.toHexString) var hexFillColor = fillColor.toHexString();
 		
-		if ($("#nostroke").checked()) hexStrokeColor = "rgba(0,0,0,0)";
-		if ($("#nofill").checked()) hexFillColor = "rgba(0,0,0,0)";
+		if ($("#nostroke")[0].checked()) hexStrokeColor = "rgba(0,0,0,0)";
+		if ($("#nofill")[0].checked()) hexFillColor = "rgba(0,0,0,0)";
 		
 		context.strokeStyle = strokeColor;
 		context.fillStyle = fillColor;
@@ -978,6 +990,15 @@ var AddFigure = React.createClass({
 							<label><input type="checkbox" value="" id="nofill" />Без заливки</label>
 						</div>
 					</div>	
+				</div>
+				
+				<div className="container-fluid">
+					<div className="col-xs-6 col-sm-6 col-md-4 col-lg-3 smallinput">
+						//
+					</div>
+					<div className="col-xs-6 col-sm-6 col-md-4 col-lg-3 smallinput">
+						//
+					</div>
 				</div>
 				
 				<div className="container-fluid">
