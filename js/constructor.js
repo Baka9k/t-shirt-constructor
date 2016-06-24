@@ -213,7 +213,7 @@ editor.toolUsed = function() {
             $("#preview").remove();
             
         } else {
-        
+			
             history.newEntry(
                 true,
                 editor.state.currentTool,
@@ -446,7 +446,6 @@ editor.tools = {
         editor.state.lastShirtColor = editor.state.shirtColor;
         
         $("#modalTitle").text("Изменить цвет футболки");
-		
 		ReactDOM.render(
 			<ChangeColor />,
 			document.getElementById("modalBody")
@@ -457,8 +456,7 @@ editor.tools = {
 	
 	addfigure: function() {
         
-        $("#modalTitle").text("Добавить фигуру");
-		
+        $("#modalTitle").text("Добавить фигуру");	
 		ReactDOM.render(
 			<AddFigure />,
 			document.getElementById("modalBody")
@@ -468,7 +466,18 @@ editor.tools = {
 	
 	
 	undo: function() {
-	
+		
+		$("#modalTitle").text("Отменить последнее действие");
+		$("#okbutton").text("Да");
+		ReactDOM.render(
+			<Undo />,
+			document.getElementById("modalBody")
+		);
+		$("#okbutton").click(function() {
+			$("#modal").modal('hide');
+			history.undo();
+		});
+		
 	},
 	
 	
@@ -535,6 +544,34 @@ history.newEntry = function(tool, content, x, y, canvas, sizeX, sizeY, previewId
     
 	console.log(entry.comment);
     
+}
+
+
+history.undo = function() {
+	
+	if (history.changes.length < 1) return;
+	
+	var lastChange = history.changes.pop();
+	
+	switch(lastChange.tool) {
+		
+		case "color":
+			editor.state.shirtColor = lastChange.oldColor;
+			editor.drawFill(editor.state.shirtColor);
+			editor.drawMasks();
+			break;
+		
+		case "addtext":
+		case "addfigure":
+		case "addpicture":
+			$("#" + lastChange.previewId).remove();
+			break;
+		
+		default:
+			console.log("Error: Unknown tool name in history entry");
+		
+	}
+	
 }
 
 
@@ -1362,6 +1399,20 @@ var NoCanvasErrorMessage = React.createClass ({
     	return(
     		<div className="container-fluid">
     			Предыдущий элемент был помещен вне какого-либо макета и будет удален.
+    		</div>
+    	);
+    }
+    
+});
+
+
+
+var Undo = React.createClass ({
+
+	render: function() {
+    	return(
+    		<div className="container-fluid">
+    			Отменить последнее изменение?
     		</div>
     	);
     }
