@@ -48,7 +48,9 @@ editor.state = {
 	noCanvasError: false,
 	
 	newPreviewId: function() {
-		editor.state.previewId = Math.random().toString();
+		var min = 0;
+		var max = Number.MAX_SAFE_INTEGER;
+		editor.state.previewId = "" + (Math.floor(Math.random() * (max - min) + min));
 	},
     
 }
@@ -505,7 +507,7 @@ var history = {};
 history.changes = [];
 
 
-var Change = function (withPreview, tool, content, x, y, canvas, sizeX, sizeY, previewId) {
+var Change = function (withPreview, tool, content, x, y, canvas, sizeX, sizeY) {
     
     if (withPreview) {
         
@@ -516,7 +518,7 @@ var Change = function (withPreview, tool, content, x, y, canvas, sizeX, sizeY, p
         this.sizeX = sizeX;
         this.sizeY = sizeY;
         this.canvas = canvas;
-        this.previewId = previewId;
+        this.previewId = editor.state.previewId;
         
         this.comment = "Added element on canvas '" + this.canvas + "'";
         
@@ -531,6 +533,8 @@ var Change = function (withPreview, tool, content, x, y, canvas, sizeX, sizeY, p
             this.newColor = editor.state.shirtColor;
             this.comment = "T-shirt color changed from " + this.oldColor + "to " + this.newColor;
         }
+        
+        return this;
         
     }
 	
@@ -552,7 +556,6 @@ history.undo = function() {
 	if (history.changes.length < 1) return;
 	
 	var lastChange = history.changes.pop();
-	
 	switch(lastChange.tool) {
 		
 		case "color":
