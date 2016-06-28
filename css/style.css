@@ -73,6 +73,10 @@ body {
 	color: #B71C1C;
 }
 
+#contentDiv {
+	 overflow: hidden;
+}
+
 .canvas {
 	width: 100%;
 	height: 10px;

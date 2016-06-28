@@ -111,9 +111,16 @@ editor.activateTools = function() {
 
 	//Add event listeners on tools buttons
 	$(".tool").each(function(index) {
-		$(this).on("click", function() {
-		    editor.useTool($(this).attr('id')); 
-		});
+		if ($(this).attr('id') == "render") {
+			$(this).on("click", function() {
+				$(this).tooltip("hide");
+				openInNewTab("");
+			});
+		} else {
+			$(this).on("click", function() {
+				editor.useTool($(this).attr('id')); 
+			});
+		}
 		$(this).tooltip();
 	});
 	
@@ -267,8 +274,10 @@ editor.useTool = function(tool) {
 	if (editor.state.noCanvasError) return;
 	
 	editor.state.currentTool = tool;
-	$("#modalOpener").click();
-	editor.tools[tool]();
+	if (!(tool == "render")) {
+		$("#modalOpener").click();
+		editor.tools[tool]();
+	}
 	
 }
 
@@ -298,6 +307,24 @@ editor.noCanvasError = function() {
 		<NoCanvasErrorMessage />,
 		document.getElementById("modalBody")
 	);
+	
+}
+
+
+
+editor.renderPng = function(win) {
+	
+	html2canvas(document.body, {
+		onrendered: function(canvas) {
+			if (win) {
+				win.focus();
+				$(win.document.body).html("");
+				win.document.body.appendChild(canvas);
+			} else {
+				alert('Разрешите всплывающие окна на этом сайте!');
+			}
+		}
+	});
 	
 }
 
@@ -414,6 +441,15 @@ var absoluteOffset = function(element) {
     
 }
 
+function openInNewTab(url) {
+	var win = window.open(url, '_blank');
+	win.focus();
+	win.document.write("<div id='loading'><b>Загрузка...</b></div>");
+	editor.renderPng(win);
+}
+
+
+
 
 //=============================== TOOLS ======================================
 
@@ -498,19 +534,7 @@ editor.tools = {
 			history.clearall();
 		});
 		
-	},
-	
-	
-	render: function() {
-		
-		$("#modalTitle").text("Сохранить в png");
-		$("#cancelbutton").remove();
-		ReactDOM.render(
-			<RenderAsPng />,
-			document.getElementById("modalBody")
-		);
-		
-	},
+	}
 	
 	
 }
@@ -1200,49 +1224,6 @@ var Clearall = React.createClass ({
 
 
 
-var RenderAsPng = React.createClass({
-	
-    componentDidMount: function() {
-		
-		$("#okbutton").click(function() {
-			$("#modal").modal('hide');
-		});
-		
-		var renderpng = this.renderpng;
-		$("#modal").on('shown.bs.modal', function() {
-			var width = 400;
-			var height = 500;
-			var canvas = createHiDPICanvas(width, height);
-			$(canvas).appendTo("#renderpngdiv");
-			renderpng();
-		});
-		
-	},
-	
-	renderpng: function() {
-		
-		
-		
-	},
-
-    render: function() {
-    	return(
-    		<div>
-    			
-				<div className="container-fluid">
-					
-					<div className="renderpng" id="renderpngdiv"></div>
-					
-				</div>
-				
-    		</div>
-		);
-	}
-	
-});
-
-
-
 
 //------------------ resources --------------------
 
@@ -1543,7 +1524,7 @@ var Header = React.createClass({
 
     render: function() {
     	return(
-    		<nav className="navbar navbar-fixed-top rednav">
+    		<nav className="navbar navbar-fixed-top rednav" data-html2canvas-ignore="true">
 			  <div className="container-fluid">
 
 					<ToolButtons tools={resources.tools} />
@@ -1560,7 +1541,7 @@ var Footer = React.createClass({
 
     render: function() {
     	return(
-			<footer className="footer">
+			<footer className="footer" data-html2canvas-ignore="true">
 			  <div className="container">
 			  
 				<div className="col-xs-12 col-sm-12 col-md-5 col-lg-4">
@@ -1581,7 +1562,7 @@ var Body = React.createClass({
 
     render: function() {
     	return(
-    		<div>
+    		<div id="contentDiv">
 				<div className="canvas" id="canvasDiv1"></div>
 				<div className="canvas" id="canvasDiv2"></div>
 				<div className="canvas" id="canvasDiv3"></div>
@@ -1607,7 +1588,7 @@ var EmptyContainer80 = React.createClass({
 
     render: function() {
     	return(
-			<div className="container empty-container-80">&nbsp;</div>
+			<div className="container empty-container-80" data-html2canvas-ignore="true">&nbsp;</div>
 		);
 	}
 	
@@ -1623,7 +1604,7 @@ var Modal = React.createClass({
     
     render: function() {
         return (
-          <div className="modal fade" id="modal">
+          <div className="modal fade" id="modal" data-html2canvas-ignore="true">
             <div className="modal-dialog">
               <div className="modal-content">
                 <div className="modal-header">
