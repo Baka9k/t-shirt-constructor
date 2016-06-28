@@ -114,7 +114,9 @@ editor.activateTools = function() {
 		$(this).on("click", function() {
 		    editor.useTool($(this).attr('id')); 
 		});
+		$(this).tooltip();
 	});
+	
 }
 
 
@@ -484,12 +486,30 @@ editor.tools = {
 	
 	
 	clearall: function() {
-	
+		
+		$("#modalTitle").text("Очистить всё");
+		$("#okbutton").text("Да");
+		ReactDOM.render(
+			<Clearall />,
+			document.getElementById("modalBody")
+		);
+		$("#okbutton").click(function() {
+			$("#modal").modal('hide');
+			history.clearall();
+		});
+		
 	},
 	
 	
 	render: function() {
-	
+		
+		$("#modalTitle").text("Сохранить в png");
+		$("#cancelbutton").remove();
+		ReactDOM.render(
+			<RenderAsPng />,
+			document.getElementById("modalBody")
+		);
+		
 	},
 	
 	
@@ -578,6 +598,33 @@ history.undo = function() {
 }
 
 
+history.clearall = function() {
+	
+	while (history.changes.length > 0) {
+	
+		var lastChange = history.changes.pop();
+		switch(lastChange.tool) {
+			
+			case "color":
+				editor.state.shirtColor = lastChange.oldColor;
+				editor.drawFill(editor.state.shirtColor);
+				editor.drawMasks();
+				break;
+			
+			case "addtext":
+			case "addfigure":
+			case "addpicture":
+				$("#" + lastChange.previewId).remove();
+				break;
+			
+			default:
+				console.log("Error: Unknown tool name in history entry");
+			
+		}
+	
+	}
+
+}
 
 
 
@@ -1145,6 +1192,68 @@ var AddFigure = React.createClass({
 
 
 
+var Undo = React.createClass ({
+
+	render: function() {
+    	return(
+    		<div className="container-fluid">
+    			Отменить последнее изменение?
+    		</div>
+    	);
+    }
+    
+});
+
+
+
+var Clearall = React.createClass ({
+
+	render: function() {
+    	return(
+    		<div className="container-fluid">
+    			Очистить макет?
+    		</div>
+    	);
+    }
+    
+});
+
+
+
+var RenderAsPng = React.createClass({
+	
+    componentDidMount: function() {
+		$("#okbutton").click(function() {
+			$("#modal").modal('hide');
+		});
+	},
+	
+	renderpng: function() {
+		var canvas = document.getElementById("preview");
+		var context = canvas.getContext("2d");
+		var canvasWidth = 300;
+		var canvasHeight = 300;
+	},
+
+    render: function() {
+    	return(
+    		<div>
+    			
+				<div className="container-fluid">
+					
+					<div className="renderpng"></div>
+					
+				</div>
+				
+    		</div>
+		);
+	}
+	
+});
+
+
+
+
 //------------------ resources --------------------
 
 var resources = {};
@@ -1410,20 +1519,6 @@ var NoCanvasErrorMessage = React.createClass ({
 
 
 
-var Undo = React.createClass ({
-
-	render: function() {
-    	return(
-    		<div className="container-fluid">
-    			Отменить последнее изменение?
-    		</div>
-    	);
-    }
-    
-});
-
-
-
 
 //---------- main components classes -------------
 
@@ -1436,7 +1531,7 @@ var ToolButtons = React.createClass({
 				{this.props.tools.map(function(tool) {
 					return (
 						<li className="nav-item" key={tool.id}>
-						  <button type="button" className="tool" data-toggle="tooltip" title={tool.tooltip} id={tool.id}>
+						  <button type="button" className="tool" data-toggle="tooltip" title={tool.tooltip} id={tool.id} data-placement="bottom">
 						  	<span className={tool.glyphicon}></span>
 						  </button>
 						</li>);
