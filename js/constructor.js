@@ -18,8 +18,8 @@ editor.contexts = {};
 
 editor.state = {
     
-    shirtColor: "#ff0000",
-    lastShirtColor: "ff0000",
+    shirtColor: "#ED1C24",
+    lastShirtColor: "#ED1C24",
 	currentTool: "",
 	content: {},
 	absoluteX: 0,
@@ -601,27 +601,7 @@ history.undo = function() {
 history.clearall = function() {
 	
 	while (history.changes.length > 0) {
-	
-		var lastChange = history.changes.pop();
-		switch(lastChange.tool) {
-			
-			case "color":
-				editor.state.shirtColor = lastChange.oldColor;
-				editor.drawFill(editor.state.shirtColor);
-				editor.drawMasks();
-				break;
-			
-			case "addtext":
-			case "addfigure":
-			case "addpicture":
-				$("#" + lastChange.previewId).remove();
-				break;
-			
-			default:
-				console.log("Error: Unknown tool name in history entry");
-			
-		}
-	
+		history.undo();
 	}
 
 }
