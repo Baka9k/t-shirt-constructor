@@ -1223,16 +1223,26 @@ var Clearall = React.createClass ({
 var RenderAsPng = React.createClass({
 	
     componentDidMount: function() {
+		
 		$("#okbutton").click(function() {
 			$("#modal").modal('hide');
 		});
+		
+		var renderpng = this.renderpng;
+		$("#modal").on('shown.bs.modal', function() {
+			var width = 400;
+			var height = 500;
+			var canvas = createHiDPICanvas(width, height);
+			$(canvas).appendTo("#renderpngdiv");
+			renderpng();
+		});
+		
 	},
 	
 	renderpng: function() {
-		var canvas = document.getElementById("preview");
-		var context = canvas.getContext("2d");
-		var canvasWidth = 300;
-		var canvasHeight = 300;
+		
+		
+		
 	},
 
     render: function() {
@@ -1241,7 +1251,7 @@ var RenderAsPng = React.createClass({
     			
 				<div className="container-fluid">
 					
-					<div className="renderpng"></div>
+					<div className="renderpng" id="renderpngdiv"></div>
 					
 				</div>
 				
@@ -1288,7 +1298,7 @@ resources.tools = [
 	{
 		tooltip: "Цвет футболки",
 		id: "color",
-		glyphicon: "glyphicon glyphicon-tint"
+		glyphicon: "glyphicon glyphicon-adjust"
 	},
 	{
 		tooltip: "Добавить фигуру",
@@ -1613,11 +1623,11 @@ var EmptyContainer = React.createClass({
 });
 
 
-var EmptyContainer3 = React.createClass({
+var EmptyContainer80 = React.createClass({
 
     render: function() {
     	return(
-			<div className="container">&nbsp;<br />&nbsp;<br />&nbsp;</div>
+			<div className="container empty-container-80">&nbsp;</div>
 		);
 	}
 	
@@ -1685,7 +1695,7 @@ var App = React.createClass({
 		    <div>
 		    	
 		    	<Header />
-		    	<EmptyContainer3 />
+		    	<EmptyContainer80 />
 		    	<Body />
 		    	<EmptyContainer />
 		    	<Footer />

@@ -59,8 +59,10 @@ body {
 	background-color: #B71C1C;
 	color: #ffffff;
 	border: solid 2px #ffffff;
-	width: 45px;
-	height: 45px;
+	width: 48px;
+	height: 48px;
+	font-size: 18px;
+	border-radius: 24px;
 	margin: 5px;
 	position: relative;
 	float: left;
@@ -76,6 +78,10 @@ body {
 	height: 10px;
 	position: relative;
 	float: left;
+}
+
+.empty-container-80 {
+	height: 160px;
 }
 
 
@@ -244,7 +250,10 @@ select {
 	.canvas {
 		width: 50%;
 	}
-}                                
-                                         
-                                         
-                                            
+}                       
+
+@media screen and (min-width: 425px) {
+	.empty-container-80 {
+		height: 80px;
+	}
+}
