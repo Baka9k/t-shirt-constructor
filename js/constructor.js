@@ -381,6 +381,7 @@ var createHiDPICanvas = function(w, h, ratio) {
     can.height = h * ratio;
     can.style.width = w + "px";
     can.style.height = h + "px";
+    can.pixelRatio = ratio;
     can.getContext("2d").setTransform(ratio, 0, 0, ratio, 0, 0);
     return can;
     
@@ -692,8 +693,15 @@ var AddText = React.createClass({
 		context.font = size + "px " + font;
 		var textWidth = context.measureText(text).width;
 		var textHeight = size;
+		
+		textWidth *= canvas.pixelRatio;
+		textHeight *= canvas.pixelRatio;
+		
 		var x = canvas.width / 2 - textWidth / 2;
 		var y = canvas.height / 2 + textHeight / 2;
+		
+		x /= canvas.pixelRatio;
+		y /= canvas.pixelRatio;
 		
 		context.clearRect(0, 0, canvas.width, canvas.height);
 		
@@ -1012,9 +1020,12 @@ var AddFigure = React.createClass({
 		var strokeColor = $("#colorpicker").spectrum('get');
 		var fillColor = $("#colorpicker2").spectrum('get');
 		
-		//TODO: fix measures on HiDPI devices
 		var x = canvas.width / 2 - width / 2;
 		var y = canvas.height / 2 - height / 2;
+		width /= canvas.pixelRatio;
+		height /= canvas.pixelRatio;
+		x /= canvas.pixelRatio;
+		y /= canvas.pixelRatio;
 		
 		if (strokeColor.toHexString) var hexStrokeColor = strokeColor.toHexString();
 		if (fillColor.toHexString) var hexFillColor = fillColor.toHexString();
