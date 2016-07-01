@@ -67,6 +67,7 @@ body {
 	position: relative;
 	float: left;
 	transition: all 0.3s ease;
+	padding-top: 5px;
 }
 .tool:hover {
 	background-color: #ffffff;
