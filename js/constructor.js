@@ -62,7 +62,7 @@ editor.preparePage = function() {
 
 	//Set height of containers for 3 main canvases
 	var width = $("#canvasDiv1").width();
-	var height = width / 0.96;
+	var height = width / 0.935;
 	$("#canvasDiv1").height(height);
 	$("#canvasDiv2").height(height);
 	$("#canvasDiv3").height(height);
@@ -1260,37 +1260,37 @@ resources.tools = [
 	{
 		tooltip: "Добавить текст",
 		id: "addtext",
-		glyphicon: "glyphicon glyphicon-font"
+		glyphicon: "font_download"
 	},
 	{
 		tooltip: "Добавить картинку",
 		id: "addpicture",
-		glyphicon: "glyphicon glyphicon-picture"
+		glyphicon: "wallpaper"
 	},
 	{
 		tooltip: "Цвет футболки",
 		id: "color",
-		glyphicon: "glyphicon glyphicon-adjust"
+		glyphicon: "color_lens"
 	},
 	{
 		tooltip: "Добавить фигуру",
 		id: "addfigure",
-		glyphicon: "glyphicon glyphicon-stop"
+		glyphicon: "change_history"
 	},
 	{
 		tooltip: "Отменить последнее действие",
 		id: "undo",
-		glyphicon: "glyphicon glyphicon-backward"
+		glyphicon: "undo"
 	},
 	{
 		tooltip: "Очистить всё",
 		id: "clearall",
-		glyphicon: "glyphicon glyphicon-trash"
+		glyphicon: "delete"
 	},
 	{
 		tooltip: "Сохранить как картинку",
 		id: "render",
-		glyphicon: "glyphicon glyphicon-save-file"
+		glyphicon: "photo_camera"
 	}
 	
 ];
@@ -1514,7 +1514,7 @@ var ToolButtons = React.createClass({
 					return (
 						<li className="nav-item" key={tool.id}>
 						  <button type="button" className="tool" data-toggle="tooltip" title={tool.tooltip} id={tool.id} data-placement="bottom">
-						  	<span className={tool.glyphicon}></span>
+						  	<i className="material-icons">{tool.glyphicon}</i>
 						  </button>
 						</li>);
 				})}
