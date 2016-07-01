@@ -18,8 +18,8 @@ editor.contexts = {};
 
 editor.state = {
     
-    shirtColor: "#ED1C24",
-    lastShirtColor: "#ED1C24",
+    shirtColor: "#ff0000",
+    lastShirtColor: "#ff0000",
 	currentTool: "",
 	content: {},
 	absoluteX: 0,
