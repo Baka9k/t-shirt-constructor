@@ -17,6 +17,8 @@ Responsive user-friendly app, that works on the desktop and on mobile devices.
 ![Screenshot 2](https://github.com/baka9k/t-shirt-constructor/raw/master/screenshots/2.png "'Pick t-shirt color' tool")
 ![Screenshot 3](https://github.com/baka9k/t-shirt-constructor/raw/master/screenshots/3.png "'Add text' tool")
 ![Screenshot 4](https://github.com/baka9k/t-shirt-constructor/raw/master/screenshots/4.png "Example")
+![Screenshot 5](https://github.com/baka9k/t-shirt-constructor/raw/master/screenshots/5.png "On touchscreen")
+![Screenshot 6](https://github.com/baka9k/t-shirt-constructor/raw/master/screenshots/6.png "On touchscreen")
 
 ## Uses libraries and frameworks:
 - **[React](https://github.com/facebook/react)** (BSD)
