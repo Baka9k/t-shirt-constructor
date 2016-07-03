@@ -257,7 +257,7 @@ select {
 	}
 }                       
 
-@media screen and (min-width: 425px) {
+@media screen and (min-width: 407px) {
 	.empty-container-80 {
 		height: 80px;
 	}
