@@ -9,10 +9,10 @@ Responsive user-friendly app, that works on the desktop and on mobile devices.
 - Add figure
 - Render to png
 
-##Live demo:
+## Live demo:
 **[https://baka9k.github.io/t-shirt-constructor/](https://baka9k.github.io/t-shirt-constructor/)**
 
-##Screenshots:
+## Screenshots:
 ![Screenshot 1](https://github.com/baka9k/t-shirt-constructor/raw/master/screenshots/1.png "Template")
 ![Screenshot 2](https://github.com/baka9k/t-shirt-constructor/raw/master/screenshots/2.png "'Pick t-shirt color' tool")
 ![Screenshot 3](https://github.com/baka9k/t-shirt-constructor/raw/master/screenshots/3.png "'Add text' tool")
